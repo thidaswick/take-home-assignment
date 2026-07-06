@@ -148,6 +148,7 @@ The application follows **Clean Architecture** principles and demonstrates moder
 | Git & GitHub | Version control and collaboration |
 | Swagger | Interactive API documentation |
 | Postman | API testing and collection sharing |
+|VS-code  | Developments |
 | Cursor AI | AI-assisted development |
 
 ---
