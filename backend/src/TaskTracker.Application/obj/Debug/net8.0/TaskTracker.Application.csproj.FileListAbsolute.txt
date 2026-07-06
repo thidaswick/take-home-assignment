@@ -1,0 +1,16 @@
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\bin\Debug\net8.0\TaskTracker.Application.deps.json
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\bin\Debug\net8.0\TaskTracker.Application.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\bin\Debug\net8.0\TaskTracker.Application.pdb
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\bin\Debug\net8.0\TaskTracker.Domain.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\bin\Debug\net8.0\TaskTracker.Domain.pdb
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.csproj.AssemblyReference.cache
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.AssemblyInfoInputs.cache
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.AssemblyInfo.cs
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.csproj.CoreCompileInputs.cache
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.sourcelink.json
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTrac.CBC11A5F.Up2Date
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\refint\TaskTracker.Application.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\TaskTracker.Application.pdb
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Application\obj\Debug\net8.0\ref\TaskTracker.Application.dll

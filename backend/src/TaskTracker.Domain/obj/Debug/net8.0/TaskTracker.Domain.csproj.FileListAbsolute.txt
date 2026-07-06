@@ -1,0 +1,12 @@
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\bin\Debug\net8.0\TaskTracker.Domain.deps.json
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\bin\Debug\net8.0\TaskTracker.Domain.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\bin\Debug\net8.0\TaskTracker.Domain.pdb
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.AssemblyInfoInputs.cache
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.AssemblyInfo.cs
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.sourcelink.json
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\refint\TaskTracker.Domain.dll
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\TaskTracker.Domain.pdb
+C:\Users\Thidas\Documents\GitHub\take-home-assignment\backend\src\TaskTracker.Domain\obj\Debug\net8.0\ref\TaskTracker.Domain.dll

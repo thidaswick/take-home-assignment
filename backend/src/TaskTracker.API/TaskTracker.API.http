@@ -1,0 +1,9 @@
+@TaskTracker.API_HostAddress = https://localhost:7068
+
+GET {{TaskTracker.API_HostAddress}}/health
+Accept: application/json
+
+###
+
+GET {{TaskTracker.API_HostAddress}}/swagger/v1/swagger.json
+Accept: application/json

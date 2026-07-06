@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TaskTracker.API</name>
+    </assembly>
+    <members>
+        <member name="T:TaskTracker.API.Extensions.ServiceCollectionExtensions">
+            <summary>
+            API service registration extensions.
+            </summary>
+        </member>
+        <member name="M:TaskTracker.API.Extensions.ServiceCollectionExtensions.AddApiServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds API-specific services including controllers, Swagger, and health checks.
+            </summary>
+            <param name="services">The service collection.</param>
+            <returns>The service collection for chaining.</returns>
+        </member>
+        <member name="T:TaskTracker.API.Extensions.WebApplicationExtensions">
+            <summary>
+            HTTP pipeline configuration extensions.
+            </summary>
+        </member>
+        <member name="M:TaskTracker.API.Extensions.WebApplicationExtensions.UseApiPipeline(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+            Configures the HTTP request pipeline for the API.
+            </summary>
+            <param name="app">The web application.</param>
+            <returns>The web application for chaining.</returns>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Entry point for integration test hosting.
+            </summary>
+        </member>
+    </members>
+</doc>
