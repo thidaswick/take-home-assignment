@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TaskTracker.Domain.Entities;
-using TaskItem = TaskTracker.Domain.Entities.TaskItem;
 
 namespace TaskTracker.Infrastructure.Persistence;
 
@@ -18,14 +17,14 @@ public class ApplicationDbContext : DbContext
     }
 
     /// <summary>
-    /// Gets or sets the users data set.
+    /// Gets the users data set.
     /// </summary>
     public DbSet<User> Users => Set<User>();
 
     /// <summary>
-    /// Gets or sets the tasks data set.
+    /// Gets the task items data set.
     /// </summary>
-    public DbSet<TaskItem> Tasks => Set<TaskItem>();
+    public DbSet<TaskItem> TaskItems => Set<TaskItem>();
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)

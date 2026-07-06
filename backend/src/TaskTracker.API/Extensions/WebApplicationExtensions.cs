@@ -1,7 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using TaskTracker.Application.Common.Exceptions;
-using TaskTracker.Infrastructure.Persistence;
 
 namespace TaskTracker.API.Extensions;
 
@@ -76,19 +75,5 @@ public static class WebApplicationExtensions
         app.MapHealthChecks("/health");
 
         return app;
-    }
-
-    /// <summary>
-    /// Applies database migrations and seeds development data.
-    /// </summary>
-    /// <param name="app">The web application.</param>
-    /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task InitializeDatabaseAsync(this WebApplication app)
-    {
-        await using var scope = app.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
-
-        await DatabaseInitializer.InitializeAsync(dbContext, logger);
     }
 }

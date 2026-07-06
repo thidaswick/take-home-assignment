@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TaskTracker.Domain.Entities;
-using TaskItem = TaskTracker.Domain.Entities.TaskItem;
 
 namespace TaskTracker.Infrastructure.Persistence.Configurations;
 
@@ -13,7 +12,7 @@ public class TaskItemConfiguration : IEntityTypeConfiguration<TaskItem>
     /// <inheritdoc />
     public void Configure(EntityTypeBuilder<TaskItem> builder)
     {
-        builder.ToTable("Tasks");
+        builder.ToTable("TaskItems");
 
         builder.HasKey(task => task.Id);
 

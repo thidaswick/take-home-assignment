@@ -1,7 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TaskTracker.Application.Common.Interfaces;
 using TaskTracker.Infrastructure.Persistence;
 using TaskTracker.Infrastructure.Repositories;
 
@@ -22,25 +20,9 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
-
-        var provider = configuration["Database:Provider"] ?? "SqlServer";
-
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
-            {
-                options.UseSqlite(connectionString);
-            }
-            else
-            {
-                options.UseSqlServer(connectionString);
-            }
-        });
-
-        services.AddScoped<ITaskRepository, TaskRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services
+            .AddPersistence(configuration)
+            .AddRepositories();
 
         return services;
     }

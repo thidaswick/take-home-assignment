@@ -23,7 +23,7 @@ public class TaskRepository : ITaskRepository
 
     /// <inheritdoc />
     public Task<TaskItem?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
-        _dbContext.Tasks
+        _dbContext.TaskItems
             .Include(task => task.Owner)
             .FirstOrDefaultAsync(task => task.Id == id, cancellationToken);
 
@@ -35,7 +35,7 @@ public class TaskRepository : ITaskRepository
         Guid? ownerId,
         CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.Tasks
+        var query = _dbContext.TaskItems
             .Include(task => task.Owner)
             .AsNoTracking()
             .AsQueryable();
@@ -63,13 +63,13 @@ public class TaskRepository : ITaskRepository
 
     /// <inheritdoc />
     public async Task AddAsync(TaskItem task, CancellationToken cancellationToken = default) =>
-        await _dbContext.Tasks.AddAsync(task, cancellationToken);
+        await _dbContext.TaskItems.AddAsync(task, cancellationToken);
 
     /// <inheritdoc />
-    public void Update(TaskItem task) => _dbContext.Tasks.Update(task);
+    public void Update(TaskItem task) => _dbContext.TaskItems.Update(task);
 
     /// <inheritdoc />
-    public void Remove(TaskItem task) => _dbContext.Tasks.Remove(task);
+    public void Remove(TaskItem task) => _dbContext.TaskItems.Remove(task);
 
     /// <inheritdoc />
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
