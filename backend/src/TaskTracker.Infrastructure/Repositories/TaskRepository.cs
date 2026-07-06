@@ -31,7 +31,7 @@ public class TaskRepository : ITaskRepository
     public async Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetPagedAsync(
         int page,
         int pageSize,
-        TaskItemStatus? status,
+        Domain.Enums.TaskStatus? status,
         Guid? ownerId,
         CancellationToken cancellationToken = default)
     {

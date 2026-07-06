@@ -20,7 +20,7 @@ public class CreateTaskRequest
     /// <summary>
     /// Gets or sets the task status.
     /// </summary>
-    public TaskItemStatus Status { get; set; } = TaskItemStatus.Pending;
+    public Domain.Enums.TaskStatus Status { get; set; } = Domain.Enums.TaskStatus.Pending;
 
     /// <summary>
     /// Gets or sets the optional due date.

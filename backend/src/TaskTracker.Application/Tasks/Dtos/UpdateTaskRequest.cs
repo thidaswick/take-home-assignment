@@ -20,7 +20,7 @@ public class UpdateTaskRequest
     /// <summary>
     /// Gets or sets the task status.
     /// </summary>
-    public TaskItemStatus Status { get; set; }
+    public Domain.Enums.TaskStatus Status { get; set; }
 
     /// <summary>
     /// Gets or sets the optional due date.

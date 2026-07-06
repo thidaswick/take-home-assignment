@@ -16,6 +16,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasKey(user => user.Id);
 
+        builder.Property(user => user.FirstName)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.Property(user => user.LastName)
+            .IsRequired()
+            .HasMaxLength(100);
+
         builder.Property(user => user.Email)
             .IsRequired()
             .HasMaxLength(256);

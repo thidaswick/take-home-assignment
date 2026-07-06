@@ -3,7 +3,7 @@ namespace TaskTracker.Domain.Enums;
 /// <summary>
 /// Workflow status of a task.
 /// </summary>
-public enum TaskItemStatus
+public enum TaskStatus
 {
     /// <summary>
     /// Task has been created but not started.

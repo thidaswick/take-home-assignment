@@ -40,6 +40,8 @@ public static class DatabaseInitializer
             new()
             {
                 Id = SeedUserId,
+                FirstName = "Standard",
+                LastName = "User",
                 Email = "user@tasktracker.local",
                 PasswordHash = "seed-only",
                 Role = UserRole.User,
@@ -48,6 +50,8 @@ public static class DatabaseInitializer
             new()
             {
                 Id = SeedAdminId,
+                FirstName = "Admin",
+                LastName = "User",
                 Email = "admin@tasktracker.local",
                 PasswordHash = "seed-only",
                 Role = UserRole.Admin,
