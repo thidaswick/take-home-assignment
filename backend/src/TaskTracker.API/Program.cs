@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Mvc;
 using TaskTracker.API.Extensions;
 using TaskTracker.Application;
 using TaskTracker.Infrastructure;
+using TaskTracker.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services
     .AddApiServices();
 
 var app = builder.Build();
+
+await app.InitializeDatabaseAsync();
 
 app.UseApiPipeline();
 
