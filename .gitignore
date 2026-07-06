@@ -1,0 +1,46 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## IDE
+.vs/
+.idea/
+*.swp
+*~
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Local databases
+*.db
+*.db-shm
+*.db-wal
+
+## Logs
+*.log
+
+## Environment
+.env
+.env.*
+!.env.example
+
+## Test results
+TestResults/
+coverage/
+
+## NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+## Publish
+publish/
+out/
+
+## Tools
+.dotnet/

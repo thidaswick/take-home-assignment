@@ -1,4 +1,5 @@
 using System.Reflection;
+using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 
 namespace TaskTracker.API.Extensions;
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApiServices(this IServiceCollection services)
     {
         services.AddControllers();
+        services.AddFluentValidationAutoValidation();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
 
