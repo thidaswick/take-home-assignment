@@ -22,19 +22,10 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("DefaultConnection")
             ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
 
-        var provider = configuration["Database:Provider"] ?? "SqlServer";
-
         services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            if (string.Equals(provider, "Sqlite", StringComparison.OrdinalIgnoreCase))
-            {
-                options.UseSqlite(connectionString);
-            }
-            else
-            {
-                options.UseSqlServer(connectionString);
-            }
-        });
+            options.UseSqlServer(
+                connectionString,
+                sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
         return services;
     }
