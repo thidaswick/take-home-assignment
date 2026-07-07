@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskTracker.Application.Common.Interfaces;
 using TaskTracker.Domain.Entities;
-using TaskTracker.Domain.Enums;
 using TaskItem = TaskTracker.Domain.Entities.TaskItem;
 
 namespace TaskTracker.Infrastructure.Repositories;
@@ -29,32 +28,20 @@ public class TaskRepository : ITaskRepository
 
     /// <inheritdoc />
     public async Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetPagedAsync(
-        int page,
+        int pageNumber,
         int pageSize,
         Domain.Enums.TaskStatus? status,
         Guid? ownerId,
         CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.TaskItems
-            .Include(task => task.Owner)
-            .AsNoTracking()
-            .AsQueryable();
-
-        if (status.HasValue)
-        {
-            query = query.Where(task => task.Status == status.Value);
-        }
-
-        if (ownerId.HasValue)
-        {
-            query = query.Where(task => task.OwnerId == ownerId.Value);
-        }
+        var query = BuildFilteredQuery(status, ownerId);
 
         var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
+            .Include(task => task.Owner)
             .OrderByDescending(task => task.CreatedAt)
-            .Skip((page - 1) * pageSize)
+            .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync(cancellationToken);
 
@@ -74,4 +61,24 @@ public class TaskRepository : ITaskRepository
     /// <inheritdoc />
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
         _dbContext.SaveChangesAsync(cancellationToken);
+
+    private IQueryable<TaskItem> BuildFilteredQuery(
+        Domain.Enums.TaskStatus? status,
+        Guid? ownerId)
+    {
+        IQueryable<TaskItem> query = _dbContext.TaskItems
+            .AsNoTracking();
+
+        if (status.HasValue)
+        {
+            query = query.Where(task => task.Status == status.Value);
+        }
+
+        if (ownerId.HasValue)
+        {
+            query = query.Where(task => task.OwnerId == ownerId.Value);
+        }
+
+        return query;
+    }
 }

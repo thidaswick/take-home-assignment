@@ -18,7 +18,7 @@ public interface ITaskRepository
     /// Gets a paginated list of tasks with optional filters.
     /// </summary>
     Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetPagedAsync(
-        int page,
+        int pageNumber,
         int pageSize,
         Domain.Enums.TaskStatus? status,
         Guid? ownerId,

@@ -57,7 +57,7 @@ public class TaskListQueryValidator : AbstractValidator<TaskListQuery>
     /// </summary>
     public TaskListQueryValidator()
     {
-        RuleFor(x => x.Page)
+        RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1);
 
         RuleFor(x => x.PageSize)

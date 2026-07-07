@@ -35,12 +35,12 @@ public class GetTasksQueryHandler : IGetTasksQueryHandler
         CancellationToken cancellationToken = default)
     {
         var listQuery = query.Query;
-        var page = listQuery.Page < 1 ? 1 : listQuery.Page;
+        var pageNumber = listQuery.PageNumber < 1 ? 1 : listQuery.PageNumber;
         var pageSize = listQuery.PageSize is < 1 or > 100 ? 10 : listQuery.PageSize;
         var ownerFilter = TaskAuthorization.ResolveOwnerFilter(listQuery.OwnerId, _currentUserService);
 
         var (items, totalCount) = await _taskRepository.GetPagedAsync(
-            page,
+            pageNumber,
             pageSize,
             listQuery.Status,
             ownerFilter,
@@ -51,7 +51,7 @@ public class GetTasksQueryHandler : IGetTasksQueryHandler
         return new PagedResult<TaskDto>
         {
             Items = items.Select(TaskMapper.ToDto).ToList(),
-            Page = page,
+            PageNumber = pageNumber,
             PageSize = pageSize,
             TotalCount = totalCount,
             TotalPages = totalPages

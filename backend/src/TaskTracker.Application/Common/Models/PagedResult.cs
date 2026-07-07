@@ -14,7 +14,7 @@ public class PagedResult<T>
     /// <summary>
     /// Gets or sets the current page number.
     /// </summary>
-    public int Page { get; set; }
+    public int PageNumber { get; set; }
 
     /// <summary>
     /// Gets or sets the page size.
