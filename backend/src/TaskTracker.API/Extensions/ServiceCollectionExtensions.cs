@@ -1,6 +1,10 @@
 using System.Reflection;
+using System.Text;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TaskTracker.Application.Common.Settings;
 
 namespace TaskTracker.API.Extensions;
 
@@ -10,16 +14,40 @@ namespace TaskTracker.API.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds API-specific services including controllers, Swagger, and health checks.
+    /// Adds API-specific services including controllers, Swagger, JWT authentication, and health checks.
     /// </summary>
     /// <param name="services">The service collection.</param>
+    /// <param name="configuration">Application configuration.</param>
     /// <returns>The service collection for chaining.</returns>
-    public static IServiceCollection AddApiServices(this IServiceCollection services)
+    public static IServiceCollection AddApiServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
+            ?? throw new InvalidOperationException("JWT settings are not configured.");
+
         services.AddControllers();
         services.AddFluentValidationAutoValidation();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
+        services.AddAuthorization();
 
         services.AddSwaggerGen(options =>
         {
@@ -27,18 +55,51 @@ public static class ServiceCollectionExtensions
             {
                 Title = "TaskTracker API",
                 Version = "v1",
-                Description = "Task Tracker application API for managing tasks with authentication and real-time updates."
+                Description = "Task Tracker application API for managing tasks with JWT authentication."
             });
 
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-
-            if (File.Exists(xmlPath))
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                options.IncludeXmlComments(xmlPath);
-            }
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer",
+                BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "Enter your JWT token. Example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            });
+
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+
+            IncludeXmlComments(options, Assembly.GetExecutingAssembly());
+
+            var applicationAssembly = typeof(TaskTracker.Application.Auth.Dtos.AuthResponse).Assembly;
+            IncludeXmlComments(options, applicationAssembly);
         });
 
         return services;
+    }
+
+    private static void IncludeXmlComments(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options, Assembly assembly)
+    {
+        var xmlFile = $"{assembly.GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+
+        if (File.Exists(xmlPath))
+        {
+            options.IncludeXmlComments(xmlPath);
+        }
     }
 }

@@ -26,4 +26,12 @@ public class UserRepository : IUserRepository
     /// <inheritdoc />
     public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         _dbContext.Users.FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
+
+    /// <inheritdoc />
+    public async Task AddAsync(User user, CancellationToken cancellationToken = default) =>
+        await _dbContext.Users.AddAsync(user, cancellationToken);
+
+    /// <inheritdoc />
+    public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
+        _dbContext.SaveChangesAsync(cancellationToken);
 }

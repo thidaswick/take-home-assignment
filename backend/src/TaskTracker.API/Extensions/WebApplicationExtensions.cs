@@ -47,6 +47,26 @@ public static class WebApplicationExtensions
                     return;
                 }
 
+                if (exception is UnauthorizedException unauthorizedException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        title = unauthorizedException.Message
+                    });
+                    return;
+                }
+
+                if (exception is ConflictException conflictException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status409Conflict;
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        title = conflictException.Message
+                    });
+                    return;
+                }
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsJsonAsync(new
                 {
@@ -70,6 +90,7 @@ public static class WebApplicationExtensions
         }
 
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
         app.MapHealthChecks("/health");

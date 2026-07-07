@@ -59,4 +59,14 @@ public interface IUserRepository
     /// Gets a user by email address.
     /// </summary>
     Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds a new user.
+    /// </summary>
+    Task AddAsync(User user, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Persists pending changes.
+    /// </summary>
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

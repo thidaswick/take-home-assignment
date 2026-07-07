@@ -22,7 +22,8 @@ public static class DependencyInjection
     {
         services
             .AddPersistence(configuration)
-            .AddRepositories();
+            .AddRepositories()
+            .AddAuthInfrastructure(configuration);
 
         return services;
     }

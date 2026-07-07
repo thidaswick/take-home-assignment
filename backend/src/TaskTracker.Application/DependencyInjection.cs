@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+using TaskTracker.Application.Auth;
 using TaskTracker.Application.Tasks;
 using TaskTracker.Application.Tasks.Validators;
 
@@ -19,6 +20,7 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssemblyContaining<CreateTaskRequestValidator>();
         services.AddScoped<ITaskService, TaskService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
