@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TaskTracker.API.Authorization;
 using TaskTracker.Application.Common.Models;
-using TaskTracker.Application.Tasks;
+using TaskTracker.Application.Tasks.Commands.CreateTask;
+using TaskTracker.Application.Tasks.Commands.DeleteTask;
+using TaskTracker.Application.Tasks.Commands.UpdateTask;
 using TaskTracker.Application.Tasks.Dtos;
+using TaskTracker.Application.Tasks.Queries.GetTaskById;
+using TaskTracker.Application.Tasks.Queries.GetTasks;
 
 namespace TaskTracker.API.Controllers;
 
@@ -11,16 +17,30 @@ namespace TaskTracker.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
+[Authorize(Policy = AuthorizationPolicies.AuthenticatedUser)]
 public class TasksController : ControllerBase
 {
-    private readonly ITaskService _taskService;
+    private readonly IGetTasksQueryHandler _getTasksQueryHandler;
+    private readonly IGetTaskByIdQueryHandler _getTaskByIdQueryHandler;
+    private readonly ICreateTaskCommandHandler _createTaskCommandHandler;
+    private readonly IUpdateTaskCommandHandler _updateTaskCommandHandler;
+    private readonly IDeleteTaskCommandHandler _deleteTaskCommandHandler;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TasksController"/> class.
     /// </summary>
-    public TasksController(ITaskService taskService)
+    public TasksController(
+        IGetTasksQueryHandler getTasksQueryHandler,
+        IGetTaskByIdQueryHandler getTaskByIdQueryHandler,
+        ICreateTaskCommandHandler createTaskCommandHandler,
+        IUpdateTaskCommandHandler updateTaskCommandHandler,
+        IDeleteTaskCommandHandler deleteTaskCommandHandler)
     {
-        _taskService = taskService;
+        _getTasksQueryHandler = getTasksQueryHandler;
+        _getTaskByIdQueryHandler = getTaskByIdQueryHandler;
+        _createTaskCommandHandler = createTaskCommandHandler;
+        _updateTaskCommandHandler = updateTaskCommandHandler;
+        _deleteTaskCommandHandler = deleteTaskCommandHandler;
     }
 
     /// <summary>
@@ -31,11 +51,13 @@ public class TasksController : ControllerBase
     /// <returns>A paginated list of tasks.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<TaskDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<PagedResult<TaskDto>>> GetTasks(
         [FromQuery] TaskListQuery query,
         CancellationToken cancellationToken)
     {
-        var result = await _taskService.GetPagedAsync(query, cancellationToken);
+        var result = await _getTasksQueryHandler.HandleAsync(new GetTasksQuery(query), cancellationToken);
         return Ok(result);
     }
 
@@ -47,10 +69,12 @@ public class TasksController : ControllerBase
     /// <returns>The requested task.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskDto>> GetTask(Guid id, CancellationToken cancellationToken)
     {
-        var task = await _taskService.GetByIdAsync(id, cancellationToken);
+        var task = await _getTaskByIdQueryHandler.HandleAsync(new GetTaskByIdQuery(id), cancellationToken);
         return Ok(task);
     }
 
@@ -63,12 +87,14 @@ public class TasksController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(TaskDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskDto>> CreateTask(
         [FromBody] CreateTaskRequest request,
         CancellationToken cancellationToken)
     {
-        var task = await _taskService.CreateAsync(request, cancellationToken);
+        var task = await _createTaskCommandHandler.HandleAsync(new CreateTaskCommand(request), cancellationToken);
         return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
     }
 
@@ -81,13 +107,15 @@ public class TasksController : ControllerBase
     /// <returns>The updated task.</returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(TaskDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TaskDto>> UpdateTask(
         Guid id,
         [FromBody] UpdateTaskRequest request,
         CancellationToken cancellationToken)
     {
-        var task = await _taskService.UpdateAsync(id, request, cancellationToken);
+        var task = await _updateTaskCommandHandler.HandleAsync(new UpdateTaskCommand(id, request), cancellationToken);
         return Ok(task);
     }
 
@@ -99,10 +127,12 @@ public class TasksController : ControllerBase
     /// <returns>No content.</returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteTask(Guid id, CancellationToken cancellationToken)
     {
-        await _taskService.DeleteAsync(id, cancellationToken);
+        await _deleteTaskCommandHandler.HandleAsync(new DeleteTaskCommand(id), cancellationToken);
         return NoContent();
     }
 }

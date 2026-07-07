@@ -20,9 +20,6 @@ public class CreateTaskRequestValidator : AbstractValidator<CreateTaskRequest>
         RuleFor(x => x.Description)
             .MaximumLength(2000);
 
-        RuleFor(x => x.OwnerId)
-            .NotEmpty();
-
         RuleFor(x => x.Status)
             .IsInEnum();
     }

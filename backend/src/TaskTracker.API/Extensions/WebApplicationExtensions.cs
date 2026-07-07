@@ -67,6 +67,16 @@ public static class WebApplicationExtensions
                     return;
                 }
 
+                if (exception is ForbiddenException forbiddenException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        title = forbiddenException.Message
+                    });
+                    return;
+                }
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsJsonAsync(new
                 {

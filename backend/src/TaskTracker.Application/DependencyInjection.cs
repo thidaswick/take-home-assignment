@@ -19,7 +19,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<CreateTaskRequestValidator>();
-        services.AddScoped<ITaskService, TaskService>();
+        services.AddTaskFeature();
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

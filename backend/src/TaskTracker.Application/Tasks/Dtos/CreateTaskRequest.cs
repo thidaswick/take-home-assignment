@@ -28,7 +28,8 @@ public class CreateTaskRequest
     public DateTime? DueDate { get; set; }
 
     /// <summary>
-    /// Gets or sets the owner identifier.
+    /// Gets or sets the optional owner identifier.
+    /// Admins may assign tasks to another user; standard users ignore this value.
     /// </summary>
     public Guid OwnerId { get; set; }
 }

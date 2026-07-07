@@ -4,6 +4,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TaskTracker.API.Authorization;
+using TaskTracker.API.Services;
+using TaskTracker.Application.Common.Interfaces;
 using TaskTracker.Application.Common.Settings;
 
 namespace TaskTracker.API.Extensions;
@@ -30,6 +33,8 @@ public static class ServiceCollectionExtensions
         services.AddFluentValidationAutoValidation();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -43,11 +48,19 @@ public static class ServiceCollectionExtensions
                     ValidIssuer = jwtSettings.Issuer,
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
+                    RoleClaimType = System.Security.Claims.ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero
                 };
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy(AuthorizationPolicies.AuthenticatedUser, policy =>
+                policy.RequireAuthenticatedUser());
+
+            options.AddPolicy(AuthorizationPolicies.AdminOnly, policy =>
+                policy.RequireRole(AuthorizationPolicies.Roles.Admin));
+        });
 
         services.AddSwaggerGen(options =>
         {
@@ -55,7 +68,7 @@ public static class ServiceCollectionExtensions
             {
                 Title = "TaskTracker API",
                 Version = "v1",
-                Description = "Task Tracker application API for managing tasks with JWT authentication."
+                Description = "Task Tracker application API for managing tasks with JWT authentication and role-based authorization."
             });
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
