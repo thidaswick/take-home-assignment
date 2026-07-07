@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskTracker.Application.Common.Interfaces;
+using TaskTracker.Application.Tasks.Dtos;
 using TaskTracker.Domain.Entities;
 using TaskItem = TaskTracker.Domain.Entities.TaskItem;
 
@@ -30,11 +31,12 @@ public class TaskRepository : ITaskRepository
     public async Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        Domain.Enums.TaskStatus? status,
-        Guid? ownerId,
+        TaskListFilter filter,
         CancellationToken cancellationToken = default)
     {
-        var query = BuildFilteredQuery(status, ownerId);
+        var query = _dbContext.TaskItems
+            .AsNoTracking()
+            .ApplyFilters(filter);
 
         var totalCount = await query.CountAsync(cancellationToken);
 
@@ -61,24 +63,4 @@ public class TaskRepository : ITaskRepository
     /// <inheritdoc />
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
         _dbContext.SaveChangesAsync(cancellationToken);
-
-    private IQueryable<TaskItem> BuildFilteredQuery(
-        Domain.Enums.TaskStatus? status,
-        Guid? ownerId)
-    {
-        IQueryable<TaskItem> query = _dbContext.TaskItems
-            .AsNoTracking();
-
-        if (status.HasValue)
-        {
-            query = query.Where(task => task.Status == status.Value);
-        }
-
-        if (ownerId.HasValue)
-        {
-            query = query.Where(task => task.OwnerId == ownerId.Value);
-        }
-
-        return query;
-    }
 }

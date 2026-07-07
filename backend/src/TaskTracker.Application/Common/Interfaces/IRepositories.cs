@@ -1,5 +1,6 @@
 namespace TaskTracker.Application.Common.Interfaces;
 
+using TaskTracker.Application.Tasks.Dtos;
 using TaskTracker.Domain.Entities;
 using TaskTracker.Domain.Enums;
 using TaskItem = TaskTracker.Domain.Entities.TaskItem;
@@ -15,13 +16,12 @@ public interface ITaskRepository
     Task<TaskItem?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets a paginated list of tasks with optional filters.
+    /// Gets a paginated, optionally filtered list of tasks.
     /// </summary>
     Task<(IReadOnlyList<TaskItem> Items, int TotalCount)> GetPagedAsync(
         int pageNumber,
         int pageSize,
-        Domain.Enums.TaskStatus? status,
-        Guid? ownerId,
+        TaskListFilter filter,
         CancellationToken cancellationToken = default);
 
     /// <summary>

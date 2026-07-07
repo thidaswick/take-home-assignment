@@ -13,7 +13,7 @@ public interface IGetTasksQueryHandler : IQueryHandler<GetTasksQuery, PagedResul
 }
 
 /// <summary>
-/// Retrieves a paginated list of tasks scoped to the current user or all tasks for admins.
+/// Retrieves a paginated, optionally filtered list of tasks.
 /// </summary>
 public class GetTasksQueryHandler : IGetTasksQueryHandler
 {
@@ -37,13 +37,18 @@ public class GetTasksQueryHandler : IGetTasksQueryHandler
         var listQuery = query.Query;
         var pageNumber = listQuery.PageNumber < 1 ? 1 : listQuery.PageNumber;
         var pageSize = listQuery.PageSize is < 1 or > 100 ? 10 : listQuery.PageSize;
-        var ownerFilter = TaskAuthorization.ResolveOwnerFilter(listQuery.OwnerId, _currentUserService);
+        var ownerFilter = TaskAuthorization.ResolveOwnerFilter(listQuery.Owner, _currentUserService);
+
+        var filter = new TaskListFilter
+        {
+            Status = listQuery.Status,
+            OwnerId = ownerFilter
+        };
 
         var (items, totalCount) = await _taskRepository.GetPagedAsync(
             pageNumber,
             pageSize,
-            listQuery.Status,
-            ownerFilter,
+            filter,
             cancellationToken);
 
         var totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)pageSize);

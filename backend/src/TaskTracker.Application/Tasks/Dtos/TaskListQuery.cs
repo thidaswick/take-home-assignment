@@ -20,10 +20,10 @@ public class TaskListQuery
     /// <summary>
     /// Gets or sets an optional status filter.
     /// </summary>
-    public Domain.Enums.TaskStatus? Status { get; set; }
+    public TaskStatus? Status { get; set; }
 
     /// <summary>
-    /// Gets or sets an optional owner filter.
+    /// Gets or sets an optional owner filter (user identifier).
     /// </summary>
-    public Guid? OwnerId { get; set; }
+    public Guid? Owner { get; set; }
 }

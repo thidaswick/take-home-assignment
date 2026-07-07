@@ -66,5 +66,9 @@ public class TaskListQueryValidator : AbstractValidator<TaskListQuery>
         RuleFor(x => x.Status)
             .IsInEnum()
             .When(x => x.Status.HasValue);
+
+        RuleFor(x => x.Owner)
+            .NotEmpty()
+            .When(x => x.Owner.HasValue);
     }
 }

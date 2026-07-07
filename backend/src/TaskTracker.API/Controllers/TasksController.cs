@@ -44,11 +44,13 @@ public class TasksController : ControllerBase
     }
 
     /// <summary>
-    /// Gets a paginated list of tasks.
+    /// Gets a paginated, optionally filtered list of tasks.
     /// </summary>
-    /// <param name="query">Pagination and filter options.</param>
+    /// <param name="query">
+    /// Pagination and filter options. Supports <c>status</c>, <c>owner</c>, and combining both.
+    /// </param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A paginated list of tasks.</returns>
+    /// <returns>A paginated list of tasks matching the filters.</returns>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<TaskDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
