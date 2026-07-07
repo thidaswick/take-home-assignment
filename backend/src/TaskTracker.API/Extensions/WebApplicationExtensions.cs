@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using TaskTracker.Application.Common.Exceptions;
 
 namespace TaskTracker.API.Extensions;
@@ -24,16 +25,23 @@ public static class WebApplicationExtensions
 
                 if (exception is ValidationException validationException)
                 {
-                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                    await context.Response.WriteAsJsonAsync(new
+                    var errors = validationException.Errors
+                        .GroupBy(error => error.PropertyName)
+                        .ToDictionary(
+                            group => group.Key,
+                            group => group.Select(error => error.ErrorMessage).ToArray());
+
+                    var problemDetails = new ValidationProblemDetails(errors)
                     {
-                        title = "Validation failed.",
-                        errors = validationException.Errors
-                            .GroupBy(error => error.PropertyName)
-                            .ToDictionary(
-                                group => group.Key,
-                                group => group.Select(error => error.ErrorMessage).ToArray())
-                    });
+                        Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+                        Title = "One or more validation errors occurred.",
+                        Status = StatusCodes.Status400BadRequest,
+                        Instance = context.Request.Path
+                    };
+
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                    context.Response.ContentType = "application/problem+json";
+                    await context.Response.WriteAsJsonAsync(problemDetails);
                     return;
                 }
 

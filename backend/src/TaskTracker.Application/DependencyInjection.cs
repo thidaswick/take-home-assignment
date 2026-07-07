@@ -1,8 +1,8 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using TaskTracker.Application.Auth;
+using TaskTracker.Application.Auth.Validators;
 using TaskTracker.Application.Tasks;
-using TaskTracker.Application.Tasks.Validators;
 
 namespace TaskTracker.Application;
 
@@ -18,7 +18,7 @@ public static class DependencyInjection
     /// <returns>The service collection for chaining.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<CreateTaskRequestValidator>();
+        services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
         services.AddTaskFeature();
         services.AddScoped<IAuthService, AuthService>();
 

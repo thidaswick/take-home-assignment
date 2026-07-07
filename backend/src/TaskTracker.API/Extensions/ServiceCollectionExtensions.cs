@@ -29,8 +29,8 @@ public static class ServiceCollectionExtensions
         var jwtSettings = configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
             ?? throw new InvalidOperationException("JWT settings are not configured.");
 
-        services.AddControllers();
-        services.AddFluentValidationAutoValidation();
+        services.AddValidationPipeline();
+        services.AddFluentValidationPipeline();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
         services.AddHttpContextAccessor();
