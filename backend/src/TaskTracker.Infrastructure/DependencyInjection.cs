@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TaskTracker.Infrastructure.Ai;
 using TaskTracker.Infrastructure.Persistence;
 using TaskTracker.Infrastructure.Repositories;
 
@@ -23,7 +24,8 @@ public static class DependencyInjection
         services
             .AddPersistence(configuration)
             .AddRepositories()
-            .AddAuthInfrastructure(configuration);
+            .AddAuthInfrastructure(configuration)
+            .AddAiInfrastructure(configuration);
 
         return services;
     }

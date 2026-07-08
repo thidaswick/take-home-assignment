@@ -31,6 +31,17 @@ public static class ServiceCollectionExtensions
 
         services.AddValidationPipeline();
         services.AddFluentValidationPipeline();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("Frontend", policy =>
+            {
+                policy.SetIsOriginAllowed(origin =>
+                        origin.StartsWith("http://localhost:", StringComparison.OrdinalIgnoreCase) ||
+                        origin.StartsWith("http://127.0.0.1:", StringComparison.OrdinalIgnoreCase))
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks();
         services.AddHttpContextAccessor();

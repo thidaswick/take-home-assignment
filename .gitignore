@@ -28,6 +28,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+appsettings.Development.local.json
 
 ## Test results
 TestResults/

@@ -1,9 +1,35 @@
-@TaskTracker.API_HostAddress = https://localhost:7068
+@host = http://localhost:5108
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-GET {{TaskTracker.API_HostAddress}}/health
+### Health check (no auth)
+GET {{host}}/health
 Accept: application/json
 
 ###
 
-GET {{TaskTracker.API_HostAddress}}/swagger/v1/swagger.json
+### 1) Login — copy accessToken from response into @token above
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "amal123@gmail.com",
+  "password": "amal12345678"
+}
+
+###
+
+### 2) AI suggestions — requires @token
+POST {{host}}/api/ai/suggestions
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "I need to improve my confidence",
+  "description": ""
+}
+
+###
+
+### Swagger
+GET {{host}}/swagger/v1/swagger.json
 Accept: application/json

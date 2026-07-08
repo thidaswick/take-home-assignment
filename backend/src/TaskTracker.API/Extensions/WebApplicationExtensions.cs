@@ -85,6 +85,16 @@ public static class WebApplicationExtensions
                     return;
                 }
 
+                if (exception is AiServiceException aiServiceException)
+                {
+                    context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        title = aiServiceException.Message
+                    });
+                    return;
+                }
+
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsJsonAsync(new
                 {
@@ -108,6 +118,7 @@ public static class WebApplicationExtensions
         }
 
         app.UseHttpsRedirection();
+        app.UseCors("Frontend");
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
