@@ -1,8 +1,10 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppSidebar } from "@/components/app/AppSidebar";
 import { AppTopbar } from "@/components/app/AppTopbar";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { startTaskRealtime } from "@/lib/realtime/tasksHub";
 
 export const Route = createFileRoute("/_app")({
   ssr: false,
@@ -10,12 +12,18 @@ export const Route = createFileRoute("/_app")({
 });
 
 function AppShell() {
-  const { ready, user } = useAuth();
+  const { ready, user, token } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (ready && !user) navigate({ to: "/login", replace: true });
   }, [ready, user, navigate]);
+
+  useEffect(() => {
+    if (!user || !token) return;
+    return startTaskRealtime(() => token, queryClient);
+  }, [user, token, queryClient]);
 
   if (!ready || !user) {
     return (
@@ -28,7 +36,9 @@ function AppShell() {
   return (
     <div className="flex min-h-screen w-full bg-background">
       <div className="hidden w-64 shrink-0 md:block">
-        <div className="sticky top-0 h-screen"><AppSidebar /></div>
+        <div className="sticky top-0 h-screen">
+          <AppSidebar />
+        </div>
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
         <AppTopbar />

@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const baseURL =
-  import.meta.env.VITE_API_URL || "http://localhost:5108/api";
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5108/api";
 
 let authToken: string | null = null;
 let onUnauthorized: (() => void) | null = null;
@@ -33,7 +32,9 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = authToken ?? (typeof window !== "undefined" ? window.localStorage.getItem("taskflow.token") : null);
+  const token =
+    authToken ??
+    (typeof window !== "undefined" ? window.localStorage.getItem("taskflow.token") : null);
   if (token) {
     config.headers = config.headers ?? {};
     config.headers.Authorization = `Bearer ${token}`;
@@ -52,7 +53,9 @@ api.interceptors.response.use(
     }
     const message =
       formatApiError(error?.response?.data) ||
-      (error?.code === "ERR_NETWORK" ? "Cannot reach the API. Is the backend running on port 5108?" : null) ||
+      (error?.code === "ERR_NETWORK"
+        ? "Cannot reach the API. Is the backend running on port 5108?"
+        : null) ||
       error?.message ||
       "Request failed";
     return Promise.reject(new Error(message));

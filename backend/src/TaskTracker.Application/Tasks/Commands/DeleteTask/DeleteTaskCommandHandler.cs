@@ -18,14 +18,19 @@ public class DeleteTaskCommandHandler : IDeleteTaskCommandHandler
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ITaskRealtimeNotifier _taskRealtimeNotifier;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteTaskCommandHandler"/> class.
     /// </summary>
-    public DeleteTaskCommandHandler(ITaskRepository taskRepository, ICurrentUserService currentUserService)
+    public DeleteTaskCommandHandler(
+        ITaskRepository taskRepository,
+        ICurrentUserService currentUserService,
+        ITaskRealtimeNotifier taskRealtimeNotifier)
     {
         _taskRepository = taskRepository;
         _currentUserService = currentUserService;
+        _taskRealtimeNotifier = taskRealtimeNotifier;
     }
 
     /// <inheritdoc />
@@ -38,5 +43,6 @@ public class DeleteTaskCommandHandler : IDeleteTaskCommandHandler
 
         _taskRepository.Remove(task);
         await _taskRepository.SaveChangesAsync(cancellationToken);
+        await _taskRealtimeNotifier.NotifyTaskDeletedAsync(task.Id, cancellationToken);
     }
 }

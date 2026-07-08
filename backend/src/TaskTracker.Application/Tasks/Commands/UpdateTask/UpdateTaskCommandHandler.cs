@@ -19,14 +19,19 @@ public class UpdateTaskCommandHandler : IUpdateTaskCommandHandler
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ITaskRealtimeNotifier _taskRealtimeNotifier;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateTaskCommandHandler"/> class.
     /// </summary>
-    public UpdateTaskCommandHandler(ITaskRepository taskRepository, ICurrentUserService currentUserService)
+    public UpdateTaskCommandHandler(
+        ITaskRepository taskRepository,
+        ICurrentUserService currentUserService,
+        ITaskRealtimeNotifier taskRealtimeNotifier)
     {
         _taskRepository = taskRepository;
         _currentUserService = currentUserService;
+        _taskRealtimeNotifier = taskRealtimeNotifier;
     }
 
     /// <inheritdoc />
@@ -47,6 +52,9 @@ public class UpdateTaskCommandHandler : IUpdateTaskCommandHandler
         _taskRepository.Update(task);
         await _taskRepository.SaveChangesAsync(cancellationToken);
 
-        return TaskMapper.ToDto(task);
+        var dto = TaskMapper.ToDto(task);
+        await _taskRealtimeNotifier.NotifyTaskUpdatedAsync(dto, cancellationToken);
+
+        return dto;
     }
 }

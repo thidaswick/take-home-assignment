@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using TaskTracker.API.Hubs;
 using TaskTracker.Application.Common.Exceptions;
 
 namespace TaskTracker.API.Extensions;
@@ -122,6 +123,7 @@ public static class WebApplicationExtensions
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+        app.MapHub<TaskHub>("/hubs/tasks");
         app.MapHealthChecks("/health");
 
         return app;

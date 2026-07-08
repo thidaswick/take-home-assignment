@@ -26,8 +26,14 @@ export function MarketingHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" asChild><Link to="/login">Login</Link></Button>
-          <Button size="sm" asChild className="gradient-brand text-white shadow-sm hover:opacity-95">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/login">Login</Link>
+          </Button>
+          <Button
+            size="sm"
+            asChild
+            className="gradient-brand text-white shadow-sm hover:opacity-95"
+          >
             <Link to="/register">Register</Link>
           </Button>
         </div>
@@ -54,7 +60,13 @@ export function MarketingFooter() {
           <div key={col.title}>
             <h4 className="text-sm font-semibold">{col.title}</h4>
             <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-              {col.items.map((i) => <li key={i}><a className="hover:text-foreground" href="#">{i}</a></li>)}
+              {col.items.map((i) => (
+                <li key={i}>
+                  <a className="hover:text-foreground" href="#">
+                    {i}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         ))}

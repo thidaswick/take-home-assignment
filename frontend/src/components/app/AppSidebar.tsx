@@ -1,5 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, ListChecks, PlusCircle, BarChart3, Sparkles, User as UserIcon, Shield, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  ListChecks,
+  PlusCircle,
+  BarChart3,
+  Sparkles,
+  User as UserIcon,
+  Shield,
+  LogOut,
+} from "lucide-react";
 import { Logo } from "./Logo";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { cn } from "@/lib/utils";
@@ -41,7 +50,12 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
                   : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
               )}
             >
-              <item.icon className={cn("h-4 w-4", active ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+              <item.icon
+                className={cn(
+                  "h-4 w-4",
+                  active ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
+                )}
+              />
               <span>{label}</span>
             </Link>
           );
@@ -58,9 +72,16 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
                 : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60",
             )}
           >
-            <Shield className={cn("h-4 w-4", pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground")} />
+            <Shield
+              className={cn(
+                "h-4 w-4",
+                pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground",
+              )}
+            />
             <span>Admin</span>
-            <span className="ml-auto rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">Admin</span>
+            <span className="ml-auto rounded-md bg-primary/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
+              Admin
+            </span>
           </Link>
         )}
       </nav>
@@ -72,13 +93,18 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
               {user ? (user.firstName[0] ?? "") + (user.lastName[0] ?? "") : "?"}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{user ? `${user.firstName} ${user.lastName}` : "Guest"}</p>
+              <p className="truncate text-sm font-medium">
+                {user ? `${user.firstName} ${user.lastName}` : "Guest"}
+              </p>
               <p className="truncate text-xs text-muted-foreground">{user?.email ?? ""}</p>
             </div>
           </div>
         </div>
         <button
-          onClick={() => { logout(); onNavigate?.(); }}
+          onClick={() => {
+            logout();
+            onNavigate?.();
+          }}
           className="inline-flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-foreground"
         >
           <LogOut className="h-4 w-4" /> Logout

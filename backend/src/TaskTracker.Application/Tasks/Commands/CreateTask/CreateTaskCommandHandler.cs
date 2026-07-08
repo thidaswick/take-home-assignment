@@ -21,6 +21,7 @@ public class CreateTaskCommandHandler : ICreateTaskCommandHandler
     private readonly ITaskRepository _taskRepository;
     private readonly IUserRepository _userRepository;
     private readonly ICurrentUserService _currentUserService;
+    private readonly ITaskRealtimeNotifier _taskRealtimeNotifier;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CreateTaskCommandHandler"/> class.
@@ -28,11 +29,13 @@ public class CreateTaskCommandHandler : ICreateTaskCommandHandler
     public CreateTaskCommandHandler(
         ITaskRepository taskRepository,
         IUserRepository userRepository,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        ITaskRealtimeNotifier taskRealtimeNotifier)
     {
         _taskRepository = taskRepository;
         _userRepository = userRepository;
         _currentUserService = currentUserService;
+        _taskRealtimeNotifier = taskRealtimeNotifier;
     }
 
     /// <inheritdoc />
@@ -59,6 +62,9 @@ public class CreateTaskCommandHandler : ICreateTaskCommandHandler
         await _taskRepository.AddAsync(task, cancellationToken);
         await _taskRepository.SaveChangesAsync(cancellationToken);
 
-        return TaskMapper.ToDto(task);
+        var dto = TaskMapper.ToDto(task);
+        await _taskRealtimeNotifier.NotifyTaskCreatedAsync(dto, cancellationToken);
+
+        return dto;
     }
 }

@@ -11,7 +11,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageTransition } from "@/components/app/PageTransition";
 import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -70,13 +76,18 @@ function NewTaskPage() {
 
   async function fillWithAi() {
     const title = form.getValues("title");
-    if (!title) { toast.error("Add a title first"); return; }
+    if (!title) {
+      toast.error("Add a title first");
+      return;
+    }
     setAiLoading(true);
     try {
       const s = await generateAiSuggestions({ title, description: form.getValues("description") });
       form.setValue("description", s.improvedDescription, { shouldValidate: true });
       toast.success("AI enhanced your description");
-    } finally { setAiLoading(false); }
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   return (
@@ -85,32 +96,62 @@ function NewTaskPage() {
         <header className="mb-6">
           <h1 className="text-2xl font-semibold tracking-tight">Create task</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {isAdmin ? "Create a task for yourself or assign it to another user." : "Capture the essentials — you can refine details later."}
+            {isAdmin
+              ? "Create a task for yourself or assign it to another user."
+              : "Capture the essentials — you can refine details later."}
           </p>
         </header>
 
-        <form onSubmit={form.handleSubmit((v) => create.mutate(v))} className="space-y-5 rounded-2xl border bg-card p-6 shadow-sm">
+        <form
+          onSubmit={form.handleSubmit((v) => create.mutate(v))}
+          className="space-y-5 rounded-2xl border bg-card p-6 shadow-sm"
+        >
           <div className="space-y-1.5">
             <Label htmlFor="title">Title</Label>
-            <Input id="title" placeholder="e.g. Wire up SignalR channel" {...form.register("title")} />
-            {form.formState.errors.title && <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>}
+            <Input
+              id="title"
+              placeholder="e.g. Wire up SignalR channel"
+              {...form.register("title")}
+            />
+            {form.formState.errors.title && (
+              <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>
+            )}
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label htmlFor="description">Description</Label>
-              <Button type="button" variant="outline" size="sm" onClick={fillWithAi} disabled={aiLoading}>
-                <Sparkles className="mr-1 h-3.5 w-3.5 text-primary" /> {aiLoading ? "Generating..." : "Generate with AI"}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={fillWithAi}
+                disabled={aiLoading}
+              >
+                <Sparkles className="mr-1 h-3.5 w-3.5 text-primary" />{" "}
+                {aiLoading ? "Generating..." : "Generate with AI"}
               </Button>
             </div>
-            <Textarea id="description" rows={6} placeholder="What needs to happen and why?" {...form.register("description")} />
+            <Textarea
+              id="description"
+              rows={6}
+              placeholder="What needs to happen and why?"
+              {...form.register("description")}
+            />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label>Status</Label>
-              <Select value={form.watch("status")} onValueChange={(v) => form.setValue("status", v as TaskStatus, { shouldValidate: true })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Select
+                value={form.watch("status")}
+                onValueChange={(v) =>
+                  form.setValue("status", v as TaskStatus, { shouldValidate: true })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todo">Pending</SelectItem>
                   <SelectItem value="in_progress">In progress</SelectItem>
@@ -122,7 +163,9 @@ function NewTaskPage() {
             <div className="space-y-1.5">
               <Label htmlFor="dueDate">Due date</Label>
               <Input id="dueDate" type="date" {...form.register("dueDate")} />
-              {form.formState.errors.dueDate && <p className="text-xs text-destructive">{form.formState.errors.dueDate.message}</p>}
+              {form.formState.errors.dueDate && (
+                <p className="text-xs text-destructive">{form.formState.errors.dueDate.message}</p>
+              )}
             </div>
           </div>
 
@@ -133,7 +176,9 @@ function NewTaskPage() {
                 value={form.watch("ownerId") ?? user?.id}
                 onValueChange={(v) => form.setValue("ownerId", v, { shouldValidate: true })}
               >
-                <SelectTrigger><SelectValue placeholder="Select owner" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select owner" />
+                </SelectTrigger>
                 <SelectContent>
                   {users.map((u) => (
                     <SelectItem key={u.id} value={u.id}>
@@ -146,8 +191,14 @@ function NewTaskPage() {
           )}
 
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => navigate({ to: "/tasks" })}>Cancel</Button>
-            <Button type="submit" disabled={create.isPending} className="gradient-brand text-white hover:opacity-95">
+            <Button type="button" variant="outline" onClick={() => navigate({ to: "/tasks" })}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={create.isPending}
+              className="gradient-brand text-white hover:opacity-95"
+            >
               {create.isPending ? "Saving..." : "Save task"}
             </Button>
           </div>

@@ -64,7 +64,8 @@ export function mapAuthResponse(dto: ApiAuthResponse) {
 
 function isOverdue(dueDate: string | null | undefined, status: number): boolean {
   if (!dueDate) return false;
-  if (status === BackendTaskStatus.Completed || status === BackendTaskStatus.Cancelled) return false;
+  if (status === BackendTaskStatus.Completed || status === BackendTaskStatus.Cancelled)
+    return false;
   return new Date(dueDate) < new Date();
 }
 

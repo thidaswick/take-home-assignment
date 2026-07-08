@@ -61,16 +61,44 @@ function AdminPage() {
         <header className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Admin dashboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Operational overview for administrators.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Operational overview for administrators.
+            </p>
           </div>
-          <Badge className="rounded-full bg-primary/10 text-primary" variant="secondary">Admin</Badge>
+          <Badge className="rounded-full bg-primary/10 text-primary" variant="secondary">
+            Admin
+          </Badge>
         </header>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard label="Total users" value={usersLoading ? "…" : users.length} icon={Users} tone="brand" index={0} />
-          <StatCard label="Total tasks" value={tasksLoading ? "…" : tasks.length} icon={ListChecks} tone="cyan" index={1} />
-          <StatCard label="Completed tasks" value={tasks.filter((t) => t.status === "completed").length} icon={CheckCircle2} tone="success" index={2} />
-          <StatCard label="Pending tasks" value={tasks.filter((t) => t.status === "todo").length} icon={Clock} tone="warning" index={3} />
+          <StatCard
+            label="Total users"
+            value={usersLoading ? "…" : users.length}
+            icon={Users}
+            tone="brand"
+            index={0}
+          />
+          <StatCard
+            label="Total tasks"
+            value={tasksLoading ? "…" : tasks.length}
+            icon={ListChecks}
+            tone="cyan"
+            index={1}
+          />
+          <StatCard
+            label="Completed tasks"
+            value={tasks.filter((t) => t.status === "completed").length}
+            icon={CheckCircle2}
+            tone="success"
+            index={2}
+          />
+          <StatCard
+            label="Pending tasks"
+            value={tasks.filter((t) => t.status === "todo").length}
+            icon={Clock}
+            tone="warning"
+            index={3}
+          />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
@@ -80,14 +108,22 @@ function AdminPage() {
               {users.slice(0, 8).map((u) => (
                 <li key={u.id} className="flex items-center gap-3 py-3">
                   <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full gradient-brand text-xs font-semibold text-white">
-                    {displayName(u).split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                    {displayName(u)
+                      .split(" ")
+                      .map((w) => w[0])
+                      .join("")
+                      .slice(0, 2)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{displayName(u)}</p>
                     <p className="truncate text-xs text-muted-foreground">{u.email}</p>
                   </div>
-                  <Badge variant="secondary" className="capitalize">{u.role}</Badge>
-                  <span className="hidden text-xs text-muted-foreground sm:inline">{formatJoined(u.createdAt)}</span>
+                  <Badge variant="secondary" className="capitalize">
+                    {u.role}
+                  </Badge>
+                  <span className="hidden text-xs text-muted-foreground sm:inline">
+                    {formatJoined(u.createdAt)}
+                  </span>
                 </li>
               ))}
             </ul>

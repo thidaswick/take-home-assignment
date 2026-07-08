@@ -1,5 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, Clock, ListChecks, AlertTriangle, PlayCircle, ArrowUpRight } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  ListChecks,
+  AlertTriangle,
+  PlayCircle,
+  ArrowUpRight,
+} from "lucide-react";
 import { StatCard } from "@/components/app/StatCard";
 import { PageTransition } from "@/components/app/PageTransition";
 import { useQuery } from "@tanstack/react-query";
@@ -45,17 +52,45 @@ function DashboardPage() {
         <header className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">A snapshot of everything your team is working on.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A snapshot of everything your team is working on.
+            </p>
           </div>
-          <Button asChild className="gradient-brand text-white hover:opacity-95"><Link to="/tasks/new">Create task</Link></Button>
+          <Button asChild className="gradient-brand text-white hover:opacity-95">
+            <Link to="/tasks/new">Create task</Link>
+          </Button>
         </header>
 
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-          <StatCard label="Total Tasks" value={counts.total} icon={ListChecks} tone="brand" index={0} />
+          <StatCard
+            label="Total Tasks"
+            value={counts.total}
+            icon={ListChecks}
+            tone="brand"
+            index={0}
+          />
           <StatCard label="Pending" value={counts.pending} icon={Clock} tone="warning" index={1} />
-          <StatCard label="In Progress" value={counts.inProgress} icon={PlayCircle} tone="cyan" index={2} />
-          <StatCard label="Completed" value={counts.completed} icon={CheckCircle2} tone="success" index={3} />
-          <StatCard label="Overdue" value={counts.overdue} icon={AlertTriangle} tone="danger" index={4} />
+          <StatCard
+            label="In Progress"
+            value={counts.inProgress}
+            icon={PlayCircle}
+            tone="cyan"
+            index={2}
+          />
+          <StatCard
+            label="Completed"
+            value={counts.completed}
+            icon={CheckCircle2}
+            tone="success"
+            index={3}
+          />
+          <StatCard
+            label="Overdue"
+            value={counts.overdue}
+            icon={AlertTriangle}
+            tone="danger"
+            index={4}
+          />
         </div>
 
         <div className="grid gap-4 lg:grid-cols-3">
@@ -65,10 +100,26 @@ function DashboardPage() {
             <div className="mt-3 h-56">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={pieData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={2}>
-                    {pieData.map((d, i) => <Cell key={i} fill={d.color} />)}
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={55}
+                    outerRadius={80}
+                    paddingAngle={2}
+                  >
+                    {pieData.map((d, i) => (
+                      <Cell key={i} fill={d.color} />
+                    ))}
                   </Pie>
-                  <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                      fontSize: 12,
+                    }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -113,14 +164,26 @@ function DashboardPage() {
               <h3 className="text-sm font-semibold">Recent activity</h3>
               <p className="text-xs text-muted-foreground">Latest task updates</p>
             </div>
-            <Button variant="ghost" size="sm" asChild><Link to="/tasks">View all <ArrowUpRight className="ml-1 h-3.5 w-3.5" /></Link></Button>
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/tasks">
+                View all <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+              </Link>
+            </Button>
           </div>
           <ul className="mt-3 divide-y">
             {recent.map((t) => (
               <li key={t.id} className="flex items-center justify-between gap-3 py-3">
                 <div className="min-w-0">
-                  <Link to="/tasks/$id" params={{ id: t.id }} className="truncate text-sm font-medium hover:underline">{t.title}</Link>
-                  <p className="truncate text-xs text-muted-foreground">{t.ownerName} · Due {new Date(t.dueDate).toLocaleDateString()}</p>
+                  <Link
+                    to="/tasks/$id"
+                    params={{ id: t.id }}
+                    className="truncate text-sm font-medium hover:underline"
+                  >
+                    {t.title}
+                  </Link>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {t.ownerName} · Due {new Date(t.dueDate).toLocaleDateString()}
+                  </p>
                 </div>
                 <StatusBadge status={t.status} />
               </li>

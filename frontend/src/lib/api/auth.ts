@@ -2,8 +2,17 @@ import { api } from "./client";
 import { mapAuthResponse, type ApiAuthResponse } from "./mappers";
 import type { AuthResponse } from "./types";
 
-export interface LoginPayload { email: string; password: string; remember?: boolean }
-export interface RegisterPayload { firstName: string; lastName: string; email: string; password: string }
+export interface LoginPayload {
+  email: string;
+  password: string;
+  remember?: boolean;
+}
+export interface RegisterPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 const MOCK = import.meta.env.VITE_USE_MOCK === "true";
 

@@ -51,7 +51,9 @@ export async function getTask(id: string): Promise<Task> {
 }
 
 export async function createTask(
-  input: Omit<Task, "id" | "createdAt" | "updatedAt" | "ownerId" | "ownerName"> & { ownerId?: string },
+  input: Omit<Task, "id" | "createdAt" | "updatedAt" | "ownerId" | "ownerName"> & {
+    ownerId?: string;
+  },
 ): Promise<Task> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 400));

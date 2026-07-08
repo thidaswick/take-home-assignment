@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { User } from "@/lib/api/types";
 import * as authApi from "@/lib/api/auth";
@@ -36,7 +44,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setAuthToken(t);
         setUser(JSON.parse(u));
       }
-    } catch {}
+    } catch {
+      // Ignore invalid persisted auth payloads.
+    }
     setReady(true);
   }, []);
 
@@ -52,29 +62,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => setOnUnauthorized(null);
   }, [handleUnauthorized]);
 
-  const login = useCallback<AuthState["login"]>(async (email, password, remember) => {
-    const res = await authApi.login({ email, password, remember });
-    clearTaskCache();
-    setUser(res.user); setToken(res.token);
-    setAuthToken(res.token);
-    localStorage.setItem(STORE.token, res.token);
-    localStorage.setItem(STORE.user, JSON.stringify(res.user));
-    return res.user;
-  }, [clearTaskCache]);
+  const login = useCallback<AuthState["login"]>(
+    async (email, password, remember) => {
+      const res = await authApi.login({ email, password, remember });
+      clearTaskCache();
+      setUser(res.user);
+      setToken(res.token);
+      setAuthToken(res.token);
+      localStorage.setItem(STORE.token, res.token);
+      localStorage.setItem(STORE.user, JSON.stringify(res.user));
+      return res.user;
+    },
+    [clearTaskCache],
+  );
 
-  const register = useCallback<AuthState["register"]>(async (payload) => {
-    const res = await authApi.register(payload);
-    clearTaskCache();
-    setUser(res.user); setToken(res.token);
-    setAuthToken(res.token);
-    localStorage.setItem(STORE.token, res.token);
-    localStorage.setItem(STORE.user, JSON.stringify(res.user));
-    return res.user;
-  }, [clearTaskCache]);
+  const register = useCallback<AuthState["register"]>(
+    async (payload) => {
+      const res = await authApi.register(payload);
+      clearTaskCache();
+      setUser(res.user);
+      setToken(res.token);
+      setAuthToken(res.token);
+      localStorage.setItem(STORE.token, res.token);
+      localStorage.setItem(STORE.user, JSON.stringify(res.user));
+      return res.user;
+    },
+    [clearTaskCache],
+  );
 
   const logout = useCallback(() => {
     clearTaskCache();
-    setUser(null); setToken(null);
+    setUser(null);
+    setToken(null);
     setAuthToken(null);
     localStorage.removeItem(STORE.token);
     localStorage.removeItem(STORE.user);

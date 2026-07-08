@@ -19,12 +19,15 @@ const labels: Record<TaskStatus, string> = {
 export function StatusBadge({ status, className }: { status: TaskStatus; className?: string }) {
   return (
     <Badge variant="outline" className={cn("rounded-full font-medium", styles[status], className)}>
-      <span className={cn("mr-1.5 inline-block h-1.5 w-1.5 rounded-full",
-        status === "todo" && "bg-muted-foreground",
-        status === "in_progress" && "bg-primary",
-        status === "completed" && "bg-success",
-        status === "overdue" && "bg-destructive",
-      )} />
+      <span
+        className={cn(
+          "mr-1.5 inline-block h-1.5 w-1.5 rounded-full",
+          status === "todo" && "bg-muted-foreground",
+          status === "in_progress" && "bg-primary",
+          status === "completed" && "bg-success",
+          status === "overdue" && "bg-destructive",
+        )}
+      />
       {labels[status]}
     </Badge>
   );

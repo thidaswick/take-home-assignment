@@ -1,6 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, ShieldCheck, Zap, Sparkles, Users, BarChart3, CheckCircle2 } from "lucide-react";
+import {
+  ArrowRight,
+  ShieldCheck,
+  Zap,
+  Sparkles,
+  Users,
+  BarChart3,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MarketingHeader, MarketingFooter } from "@/components/marketing/MarketingHeader";
@@ -10,12 +18,36 @@ export const Route = createFileRoute("/")({
 });
 
 const features = [
-  { icon: ShieldCheck, title: "JWT Authentication", desc: "Secure, stateless auth with role-based access baked in." },
-  { icon: Zap, title: "Real-Time Updates", desc: "SignalR-powered live task sync across every connected client." },
-  { icon: Sparkles, title: "AI Task Assistant", desc: "Turn a title into subtasks, estimates and acceptance criteria." },
-  { icon: Users, title: "Role Based Access", desc: "Granular Admin & User surfaces with policy-based guards." },
-  { icon: BarChart3, title: "Analytics Dashboard", desc: "Track velocity, status mix and overdue trends at a glance." },
-  { icon: CheckCircle2, title: "Built to Ship", desc: "Production-grade ASP.NET Core API + typed React frontend." },
+  {
+    icon: ShieldCheck,
+    title: "JWT Authentication",
+    desc: "Secure, stateless auth with role-based access baked in.",
+  },
+  {
+    icon: Zap,
+    title: "Real-Time Updates",
+    desc: "SignalR-powered live task sync across every connected client.",
+  },
+  {
+    icon: Sparkles,
+    title: "AI Task Assistant",
+    desc: "Turn a title into subtasks, estimates and acceptance criteria.",
+  },
+  {
+    icon: Users,
+    title: "Role Based Access",
+    desc: "Granular Admin & User surfaces with policy-based guards.",
+  },
+  {
+    icon: BarChart3,
+    title: "Analytics Dashboard",
+    desc: "Track velocity, status mix and overdue trends at a glance.",
+  },
+  {
+    icon: CheckCircle2,
+    title: "Built to Ship",
+    desc: "Production-grade ASP.NET Core API + typed React frontend.",
+  },
 ];
 
 function Landing() {
@@ -36,17 +68,27 @@ function Landing() {
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="mx-auto max-w-3xl text-center"
             >
-              <Badge variant="outline" className="mb-6 rounded-full border-primary/20 bg-primary/5 px-3 py-1 text-primary">
+              <Badge
+                variant="outline"
+                className="mb-6 rounded-full border-primary/20 bg-primary/5 px-3 py-1 text-primary"
+              >
                 <Sparkles className="mr-1.5 h-3 w-3" /> New — AI Assistant is live
               </Badge>
               <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl">
-                Ship work faster with <span className="text-gradient-brand">AI-powered</span> task management
+                Ship work faster with <span className="text-gradient-brand">AI-powered</span> task
+                management
               </h1>
               <p className="mx-auto mt-5 max-w-2xl text-pretty text-base text-muted-foreground md:text-lg">
-                TaskFlow AI blends a premium dashboard with real-time collaboration and an AI copilot that turns rough ideas into concrete, shippable tasks — powered by an ASP.NET Core backend.
+                TaskFlow AI blends a premium dashboard with real-time collaboration and an AI
+                copilot that turns rough ideas into concrete, shippable tasks — powered by an
+                ASP.NET Core backend.
               </p>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Button asChild size="lg" className="gradient-brand text-white shadow-lg shadow-primary/20 hover:opacity-95">
+                <Button
+                  asChild
+                  size="lg"
+                  className="gradient-brand text-white shadow-lg shadow-primary/20 hover:opacity-95"
+                >
                   <Link to="/register">
                     Start Managing Tasks <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -75,9 +117,15 @@ function Landing() {
         {/* Features */}
         <section id="features" className="mx-auto max-w-7xl px-4 py-20 md:px-6">
           <div className="mx-auto max-w-2xl text-center">
-            <Badge variant="outline" className="rounded-full">Features</Badge>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">Everything a modern team needs</h2>
-            <p className="mt-3 text-muted-foreground">A cohesive workflow — from capturing an idea to shipping the change.</p>
+            <Badge variant="outline" className="rounded-full">
+              Features
+            </Badge>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
+              Everything a modern team needs
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              A cohesive workflow — from capturing an idea to shipping the change.
+            </p>
           </div>
 
           <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -106,11 +154,17 @@ function Landing() {
             <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10 blur-2xl" />
             <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
               <div className="max-w-xl">
-                <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">Ready to give your team superpowers?</h3>
-                <p className="mt-2 text-white/80">Spin up a workspace in under a minute. No credit card required.</p>
+                <h3 className="text-2xl font-semibold tracking-tight md:text-3xl">
+                  Ready to give your team superpowers?
+                </h3>
+                <p className="mt-2 text-white/80">
+                  Spin up a workspace in under a minute. No credit card required.
+                </p>
               </div>
               <Button size="lg" variant="secondary" asChild className="shrink-0">
-                <Link to="/register">Start Managing Tasks <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link to="/register">
+                  Start Managing Tasks <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -127,8 +181,18 @@ function DashboardPreview() {
     <div className="grid gap-3 md:grid-cols-[220px_1fr]">
       <div className="hidden flex-col gap-2 rounded-lg border bg-card p-3 md:flex">
         {["Dashboard", "My Tasks", "Analytics", "AI Assistant", "Profile"].map((l, i) => (
-          <div key={l} className={"flex items-center gap-2 rounded-md px-2 py-1.5 text-xs " + (i === 0 ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground")}>
-            <span className={"h-1.5 w-1.5 rounded-full " + (i === 0 ? "bg-primary" : "bg-muted-foreground/50")} />
+          <div
+            key={l}
+            className={
+              "flex items-center gap-2 rounded-md px-2 py-1.5 text-xs " +
+              (i === 0 ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground")
+            }
+          >
+            <span
+              className={
+                "h-1.5 w-1.5 rounded-full " + (i === 0 ? "bg-primary" : "bg-muted-foreground/50")
+              }
+            />
             {l}
           </div>
         ))}
@@ -142,7 +206,9 @@ function DashboardPreview() {
             { l: "Completed", v: "55", t: "text-success" },
           ].map((c) => (
             <div key={c.l} className="rounded-lg border bg-card p-3">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{c.l}</div>
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                {c.l}
+              </div>
               <div className={"mt-1 text-lg font-semibold " + c.t}>{c.v}</div>
             </div>
           ))}
@@ -158,9 +224,14 @@ function DashboardPreview() {
               { t: "Implement JWT refresh", s: "Pending", c: "text-muted-foreground bg-muted" },
               { t: "Write integration tests", s: "Completed", c: "text-success bg-success/15" },
             ].map((r) => (
-              <div key={r.t} className="flex items-center justify-between rounded-md border px-3 py-2 text-xs">
+              <div
+                key={r.t}
+                className="flex items-center justify-between rounded-md border px-3 py-2 text-xs"
+              >
                 <span className="truncate">{r.t}</span>
-                <span className={"rounded-full px-2 py-0.5 text-[10px] font-medium " + r.c}>{r.s}</span>
+                <span className={"rounded-full px-2 py-0.5 text-[10px] font-medium " + r.c}>
+                  {r.s}
+                </span>
               </div>
             ))}
           </div>

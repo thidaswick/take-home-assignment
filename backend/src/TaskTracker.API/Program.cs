@@ -12,7 +12,10 @@ builder.Services
 
 var app = builder.Build();
 
-await DatabaseSeeder.InitializeAsync(app.Services);
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await DatabaseSeeder.InitializeAsync(app.Services);
+}
 
 app.UseApiPipeline();
 

@@ -6,7 +6,12 @@ export function EmptyState({
   title,
   description,
   action,
-}: { icon: LucideIcon; title: string; description?: string; action?: ReactNode }) {
+}: {
+  icon: LucideIcon;
+  title: string;
+  description?: string;
+  action?: ReactNode;
+}) {
   return (
     <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed bg-card/50 px-6 py-16 text-center">
       <span className="grid h-12 w-12 place-items-center rounded-2xl bg-primary/10 text-primary">

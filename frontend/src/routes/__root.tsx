@@ -80,23 +80,48 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "TaskFlow AI — AI-powered task management for engineering teams" },
-      { name: "description", content: "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams." },
+      {
+        name: "description",
+        content:
+          "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams.",
+      },
       { name: "author", content: "TaskFlow AI" },
-      { property: "og:title", content: "TaskFlow AI — AI-powered task management for engineering teams" },
-      { property: "og:description", content: "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams." },
+      {
+        property: "og:title",
+        content: "TaskFlow AI — AI-powered task management for engineering teams",
+      },
+      {
+        property: "og:description",
+        content:
+          "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "TaskFlow AI — AI-powered task management for engineering teams" },
-      { name: "twitter:description", content: "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b468f244-3dda-4e6a-9af8-593fe9f4b828/id-preview-988b6888--71bef19e-b970-4d03-8484-97ba5778d2da.lovable.app-1783442705770.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b468f244-3dda-4e6a-9af8-593fe9f4b828/id-preview-988b6888--71bef19e-b970-4d03-8484-97ba5778d2da.lovable.app-1783442705770.png" },
+      {
+        name: "twitter:title",
+        content: "TaskFlow AI — AI-powered task management for engineering teams",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "TaskFlow AI is a modern task platform with real-time updates, AI suggestions, analytics, and role-based access for shipping teams.",
+      },
+      {
+        property: "og:image",
+        content: "/og-image.png",
+      },
+      {
+        name: "twitter:image",
+        content: "/og-image.png",
+      },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/og-image.png" },
     ],
   }),
   shellComponent: RootShell,

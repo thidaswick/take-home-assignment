@@ -3,7 +3,18 @@ import { PageTransition } from "@/components/app/PageTransition";
 import { useQuery } from "@tanstack/react-query";
 import { listTasks } from "@/lib/api/tasks";
 import { useAuth } from "@/lib/auth/AuthContext";
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Line, LineChart, Legend } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+  Line,
+  LineChart,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/_app/analytics")({ component: AnalyticsPage });
 
@@ -23,7 +34,7 @@ function AnalyticsPage() {
   ];
 
   const velocity = Array.from({ length: 7 }).map((_, i) => ({
-    day: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"][i],
+    day: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][i],
     created: Math.max(1, Math.round(Math.sin(i) * 3 + 6)),
     completed: Math.max(1, Math.round(Math.cos(i) * 3 + 5)),
   }));
@@ -33,7 +44,9 @@ function AnalyticsPage() {
       <div className="mx-auto max-w-7xl space-y-6">
         <header>
           <h1 className="text-2xl font-semibold tracking-tight">Analytics</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Understand throughput and where the team spends time.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Understand throughput and where the team spends time.
+          </p>
         </header>
 
         <div className="grid gap-4 lg:grid-cols-2">
@@ -45,8 +58,15 @@ function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} />
-                  <Bar dataKey="value" fill="var(--primary)" radius={[8,8,0,0]} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                      fontSize: 12,
+                    }}
+                  />
+                  <Bar dataKey="value" fill="var(--primary)" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -59,10 +79,29 @@ function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                   <XAxis dataKey="day" stroke="var(--muted-foreground)" fontSize={12} />
                   <YAxis stroke="var(--muted-foreground)" fontSize={12} />
-                  <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 12, fontSize: 12 }} />
+                  <Tooltip
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 12,
+                      fontSize: 12,
+                    }}
+                  />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Line type="monotone" dataKey="created" stroke="var(--brand-2)" strokeWidth={2} dot={false} />
-                  <Line type="monotone" dataKey="completed" stroke="var(--success)" strokeWidth={2} dot={false} />
+                  <Line
+                    type="monotone"
+                    dataKey="created"
+                    stroke="var(--brand-2)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="completed"
+                    stroke="var(--success)"
+                    strokeWidth={2}
+                    dot={false}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>

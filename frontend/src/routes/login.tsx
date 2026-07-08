@@ -20,7 +20,12 @@ const schema = z.object({
 });
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Login — TaskFlow AI" }, { name: "description", content: "Sign in to your TaskFlow AI workspace." }] }),
+  head: () => ({
+    meta: [
+      { title: "Login — TaskFlow AI" },
+      { name: "description", content: "Sign in to your TaskFlow AI workspace." },
+    ],
+  }),
   component: LoginPage,
 });
 
@@ -39,9 +44,11 @@ function LoginPage() {
       await login(values.email, values.password, values.remember);
       toast.success("Welcome back!");
       navigate({ to: "/dashboard" });
-    } catch (e: any) {
-      toast.error(e?.message ?? "Unable to sign in");
-    } finally { setLoading(false); }
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Unable to sign in");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -50,21 +57,45 @@ function LoginPage() {
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
 
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 py-10">
-        <div className="mb-6"><Logo /></div>
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="w-full glass-card rounded-2xl p-7 shadow-xl">
+        <div className="mb-6">
+          <Logo />
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="w-full glass-card rounded-2xl p-7 shadow-xl"
+        >
           <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Sign in to continue to your workspace.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Sign in to continue to your workspace.
+          </p>
 
           <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="you@company.com" autoComplete="email" {...form.register("email")} />
-              {form.formState.errors.email && <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>}
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                autoComplete="email"
+                {...form.register("email")}
+              />
+              {form.formState.errors.email && (
+                <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
-              <PasswordInput id="password" placeholder="••••••••" autoComplete="current-password" {...form.register("password")} />
-              {form.formState.errors.password && <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>}
+              <PasswordInput
+                id="password"
+                placeholder="••••••••"
+                autoComplete="current-password"
+                {...form.register("password")}
+              />
+              {form.formState.errors.password && (
+                <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+              )}
             </div>
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -74,18 +105,28 @@ function LoginPage() {
                 />
                 Remember me
               </label>
-              <a href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</a>
+              <a href="#" className="text-sm font-medium text-primary hover:underline">
+                Forgot password?
+              </a>
             </div>
-            <Button type="submit" disabled={loading} className="w-full gradient-brand text-white hover:opacity-95">
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full gradient-brand text-white hover:opacity-95"
+            >
               {loading ? "Signing in..." : "Login"}
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            No account yet? <Link to="/register" className="font-medium text-primary hover:underline">Create one</Link>
+            No account yet?{" "}
+            <Link to="/register" className="font-medium text-primary hover:underline">
+              Create one
+            </Link>
           </p>
           <p className="mt-3 text-center text-xs text-muted-foreground">
-            Demo admin: <span className="font-mono">admin@taskflow.ai</span> / <span className="font-mono">Admin123!</span>
+            Demo admin: <span className="font-mono">admin@taskflow.ai</span> /{" "}
+            <span className="font-mono">Admin123!</span>
           </p>
         </motion.div>
       </div>

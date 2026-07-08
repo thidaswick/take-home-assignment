@@ -33,7 +33,9 @@ export function StatCard({ label, value, delta, icon: Icon, tone = "brand", inde
           <p className="mt-2 text-3xl font-semibold tracking-tight">{value}</p>
           {delta && <p className="mt-1 text-xs text-muted-foreground">{delta}</p>}
         </div>
-        <span className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-xl", toneStyles[tone])}>
+        <span
+          className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-xl", toneStyles[tone])}
+        >
           <Icon className="h-5 w-5" />
         </span>
       </div>
