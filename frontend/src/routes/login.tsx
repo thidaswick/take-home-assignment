@@ -85,7 +85,7 @@ function LoginPage() {
             No account yet? <Link to="/register" className="font-medium text-primary hover:underline">Create one</Link>
           </p>
           <p className="mt-3 text-center text-xs text-muted-foreground">
-            Tip: use an email starting with <span className="font-mono">admin</span> to unlock the Admin dashboard.
+            Demo admin: <span className="font-mono">admin@taskflow.ai</span> / <span className="font-mono">Admin123!</span>
           </p>
         </motion.div>
       </div>

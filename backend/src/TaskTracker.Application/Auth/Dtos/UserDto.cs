@@ -31,4 +31,9 @@ public class UserDto
     /// Gets or sets the user's role.
     /// </summary>
     public UserRole Role { get; set; }
+
+    /// <summary>
+    /// Gets or sets the UTC timestamp when the user was created.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
 }

@@ -6,6 +6,7 @@ export interface ApiUserDto {
   lastName: string;
   email: string;
   role: number | string;
+  createdAt?: string;
 }
 
 export interface ApiAuthResponse {
@@ -53,6 +54,7 @@ export function mapUser(dto: ApiUserDto): User {
     lastName: dto.lastName,
     email: dto.email,
     role: mapRole(dto.role),
+    createdAt: dto.createdAt,
   };
 }
 
@@ -103,11 +105,17 @@ export function toBackendTaskPayload(input: {
   description: string;
   status: TaskStatus;
   dueDate: string;
+  ownerId?: string;
 }) {
   return {
     title: input.title,
     description: input.description,
     status: toBackendStatus(input.status),
     dueDate: input.dueDate || null,
+    ...(input.ownerId ? { ownerId: input.ownerId } : {}),
   };
+}
+
+export function toBackendStatusFilter(status: TaskStatus): number {
+  return toBackendStatus(status);
 }

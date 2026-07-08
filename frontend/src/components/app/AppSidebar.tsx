@@ -15,8 +15,7 @@ const nav = [
 
 export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const { user, logout } = useAuth();
-  const isAdmin = user?.role === "admin";
+  const { user, logout, isAdmin } = useAuth();
 
   return (
     <aside className="flex h-full w-full flex-col gap-2 border-r bg-sidebar px-4 py-5">
@@ -26,6 +25,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
 
       <nav className="flex flex-col gap-1">
         {nav.map((item) => {
+          const label = item.to === "/tasks" && isAdmin ? "All Tasks" : item.label;
           const active =
             pathname === item.to ||
             (item.to !== "/dashboard" && pathname.startsWith(item.to + "/"));
@@ -42,7 +42,7 @@ export function AppSidebar({ onNavigate }: { onNavigate?: () => void }) {
               )}
             >
               <item.icon className={cn("h-4 w-4", active ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-              <span>{item.label}</span>
+              <span>{label}</span>
             </Link>
           );
         })}

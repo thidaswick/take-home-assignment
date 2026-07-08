@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteTask, listTasks } from "@/lib/api/tasks";
+import { listUsers } from "@/lib/api/users";
 import type { Task, TaskStatus } from "@/lib/api/types";
 import { StatusBadge } from "@/components/app/StatusBadge";
 import { PageTransition } from "@/components/app/PageTransition";
@@ -22,17 +23,8 @@ export const Route = createFileRoute("/_app/tasks/")({ component: TasksPage });
 const PAGE_SIZE = 6;
 
 function TasksPage() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
-  const { data: tasks, isLoading } = useQuery({
-    queryKey: ["tasks", user?.id],
-    queryFn: listTasks,
-    enabled: !!user,
-  });
-  const del = useMutation({
-    mutationFn: async (ids: string[]) => { for (const id of ids) await deleteTask(id); },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["tasks", user?.id] }); toast.success("Deleted"); setSelected(new Set()); setConfirmOpen(false); },
-  });
 
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<TaskStatus | "all">("all");
@@ -43,22 +35,41 @@ function TasksPage() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState<string[]>([]);
 
-  const owners = useMemo(() => {
-    const s = new Set<string>();
-    (tasks ?? []).forEach((t) => s.add(t.ownerName));
-    return Array.from(s);
-  }, [tasks]);
+  const apiStatus = isAdmin && status !== "all" && status !== "overdue" ? status : undefined;
+  const apiOwnerId = isAdmin && owner !== "all" ? owner : undefined;
+
+  const { data: users = [] } = useQuery({
+    queryKey: ["users"],
+    queryFn: listUsers,
+    enabled: isAdmin,
+  });
+
+  const { data: tasks, isLoading } = useQuery({
+    queryKey: ["tasks", user?.id, { owner: apiOwnerId, status: apiStatus }],
+    queryFn: () => listTasks({ ownerId: apiOwnerId, status: apiStatus, pageSize: 100 }),
+    enabled: !!user,
+  });
+
+  const del = useMutation({
+    mutationFn: async (ids: string[]) => { for (const id of ids) await deleteTask(id); },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tasks"] });
+      toast.success("Deleted");
+      setSelected(new Set());
+      setConfirmOpen(false);
+    },
+  });
 
   const filtered = useMemo(() => {
     let list = (tasks ?? []).filter((t) => {
-      if (status !== "all" && t.status !== status) return false;
-      if (owner !== "all" && t.ownerName !== owner) return false;
+      if (status === "overdue" && t.status !== "overdue") return false;
+      if (!isAdmin && status !== "all" && t.status !== status) return false;
       if (q && !(`${t.title} ${t.description}`.toLowerCase().includes(q.toLowerCase()))) return false;
       return true;
     });
     list = list.sort((a, b) => (a.dueDate < b.dueDate ? 1 : -1) * (sortDesc ? 1 : -1));
     return list;
-  }, [tasks, q, status, owner, sortDesc]);
+  }, [tasks, q, status, sortDesc, isAdmin]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -77,19 +88,21 @@ function TasksPage() {
       <div className="mx-auto max-w-7xl space-y-5">
         <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-wrap sm:justify-between">
           <div className="min-w-0">
-            <h1 className="truncate text-2xl font-semibold tracking-tight">My Tasks</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Manage, filter and prioritise your workload.</p>
+            <h1 className="truncate text-2xl font-semibold tracking-tight">{isAdmin ? "All Tasks" : "My Tasks"}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {isAdmin ? "View and manage tasks across all users." : "Manage, filter and prioritise your workload."}
+            </p>
           </div>
           <Button asChild className="shrink-0 gradient-brand text-white hover:opacity-95"><Link to="/tasks/new"><Plus className="mr-1 h-4 w-4" /> New task</Link></Button>
         </header>
 
         <div className="rounded-2xl border bg-card shadow-sm">
-          <div className="grid gap-3 border-b p-4 md:grid-cols-[1fr_auto_auto_auto]">
+          <div className={`grid gap-3 border-b p-4 ${isAdmin ? "md:grid-cols-[1fr_auto_auto_auto]" : "md:grid-cols-[1fr_auto_auto]"}`}>
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input placeholder="Search tasks..." className="pl-9" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} />
             </div>
-            <Select value={status} onValueChange={(v) => { setStatus(v as any); setPage(1); }}>
+            <Select value={status} onValueChange={(v) => { setStatus(v as TaskStatus | "all"); setPage(1); }}>
               <SelectTrigger className="w-full md:w-[160px]"><SelectValue placeholder="Status" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All statuses</SelectItem>
@@ -99,13 +112,19 @@ function TasksPage() {
                 <SelectItem value="overdue">Overdue</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={owner} onValueChange={(v) => { setOwner(v); setPage(1); }}>
-              <SelectTrigger className="w-full md:w-[180px]"><SelectValue placeholder="Owner" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All owners</SelectItem>
-                {owners.map((o) => <SelectItem key={o} value={o}>{o}</SelectItem>)}
-              </SelectContent>
-            </Select>
+            {isAdmin && (
+              <Select value={owner} onValueChange={(v) => { setOwner(v); setPage(1); }}>
+                <SelectTrigger className="w-full md:w-[220px]"><SelectValue placeholder="Owner" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All owners</SelectItem>
+                  {users.map((u) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      {`${u.firstName} ${u.lastName}`.trim() || u.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             <Button variant="outline" onClick={() => setSortDesc((s) => !s)}><ArrowUpDown className="mr-1 h-4 w-4" /> Due date</Button>
           </div>
 
@@ -137,7 +156,7 @@ function TasksPage() {
                     <TableHead className="hidden md:table-cell">Description</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="hidden sm:table-cell">Due date</TableHead>
-                    <TableHead className="hidden lg:table-cell">Owner</TableHead>
+                    {isAdmin && <TableHead className="hidden lg:table-cell">Owner</TableHead>}
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -151,7 +170,7 @@ function TasksPage() {
                       <TableCell className="hidden max-w-[320px] truncate text-muted-foreground md:table-cell">{t.description}</TableCell>
                       <TableCell><StatusBadge status={t.status} /></TableCell>
                       <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">{new Date(t.dueDate).toLocaleDateString()}</TableCell>
-                      <TableCell className="hidden lg:table-cell">{t.ownerName}</TableCell>
+                      {isAdmin && <TableCell className="hidden lg:table-cell">{t.ownerName}</TableCell>}
                       <TableCell className="text-right">
                         <Button variant="ghost" size="sm" asChild><Link to="/tasks/$id" params={{ id: t.id }}>Open</Link></Button>
                         <Button variant="ghost" size="icon" onClick={() => { setToDelete([t.id]); setConfirmOpen(true); }}>

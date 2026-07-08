@@ -66,6 +66,11 @@ public interface IUserRepository
     Task AddAsync(User user, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Gets all users ordered by creation date (newest first).
+    /// </summary>
+    Task<IReadOnlyList<User>> ListAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Persists pending changes.
     /// </summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);

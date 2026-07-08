@@ -28,6 +28,13 @@ public class UserRepository : IUserRepository
         _dbContext.Users.FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
 
     /// <inheritdoc />
+    public async Task<IReadOnlyList<User>> ListAsync(CancellationToken cancellationToken = default) =>
+        await _dbContext.Users
+            .AsNoTracking()
+            .OrderByDescending(user => user.CreatedAt)
+            .ToListAsync(cancellationToken);
+
+    /// <inheritdoc />
     public async Task AddAsync(User user, CancellationToken cancellationToken = default) =>
         await _dbContext.Users.AddAsync(user, cancellationToken);
 

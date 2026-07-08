@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskTracker.Application.Auth;
 using TaskTracker.Application.Auth.Validators;
 using TaskTracker.Application.Tasks;
+using TaskTracker.Application.Users;
 
 namespace TaskTracker.Application;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
         services.AddTaskFeature();
+        services.AddUserFeature();
         services.AddScoped<IAuthService, AuthService>();
 
         return services;

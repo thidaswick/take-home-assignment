@@ -7,7 +7,15 @@ export interface User {
   lastName: string;
   email: string;
   role: Role;
+  createdAt?: string;
   avatarUrl?: string;
+}
+
+export interface ListTasksOptions {
+  ownerId?: string;
+  status?: TaskStatus | "all";
+  pageNumber?: number;
+  pageSize?: number;
 }
 
 export interface Task {

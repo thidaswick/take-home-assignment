@@ -1,11 +1,12 @@
 import { api } from "./client";
 import {
   mapTask,
+  toBackendStatusFilter,
   toBackendTaskPayload,
   type ApiPagedResult,
   type ApiTaskDto,
 } from "./mappers";
-import type { Task } from "./types";
+import type { ListTasksOptions, Task, TaskStatus } from "./types";
 
 const MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -13,14 +14,28 @@ const now = () => new Date().toISOString();
 
 let MOCK_TASKS: Task[] = [];
 
-export async function listTasks(): Promise<Task[]> {
+export async function listTasks(options: ListTasksOptions = {}): Promise<Task[]> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 250));
-    return [...MOCK_TASKS];
+    let items = [...MOCK_TASKS];
+    if (options.ownerId) items = items.filter((t) => t.ownerId === options.ownerId);
+    if (options.status && options.status !== "all" && options.status !== "overdue") {
+      items = items.filter((t) => t.status === options.status);
+    }
+    return items;
   }
-  const { data } = await api.get<ApiPagedResult<ApiTaskDto>>("/tasks", {
-    params: { pageNumber: 1, pageSize: 100 },
-  });
+
+  const params: Record<string, string | number> = {
+    pageNumber: options.pageNumber ?? 1,
+    pageSize: options.pageSize ?? 100,
+  };
+
+  if (options.ownerId) params.owner = options.ownerId;
+  if (options.status && options.status !== "all" && options.status !== "overdue") {
+    params.status = toBackendStatusFilter(options.status);
+  }
+
+  const { data } = await api.get<ApiPagedResult<ApiTaskDto>>("/tasks", { params });
   return data.items.map(mapTask);
 }
 
@@ -36,14 +51,14 @@ export async function getTask(id: string): Promise<Task> {
 }
 
 export async function createTask(
-  input: Omit<Task, "id" | "createdAt" | "updatedAt" | "ownerId" | "ownerName">,
+  input: Omit<Task, "id" | "createdAt" | "updatedAt" | "ownerId" | "ownerName"> & { ownerId?: string },
 ): Promise<Task> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 400));
     const t: Task = {
       ...input,
       id: "t" + Math.random().toString(36).slice(2, 7),
-      ownerId: "u_1",
+      ownerId: input.ownerId ?? "u_1",
       ownerName: "You",
       createdAt: now(),
       updatedAt: now(),

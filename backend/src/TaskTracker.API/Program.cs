@@ -1,6 +1,7 @@
 using TaskTracker.API.Extensions;
 using TaskTracker.Application;
 using TaskTracker.Infrastructure;
+using TaskTracker.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ builder.Services
     .AddApiServices(builder.Configuration);
 
 var app = builder.Build();
+
+await DatabaseSeeder.InitializeAsync(app.Services);
 
 app.UseApiPipeline();
 

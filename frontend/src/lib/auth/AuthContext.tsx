@@ -8,6 +8,7 @@ interface AuthState {
   user: User | null;
   token: string | null;
   ready: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string, remember?: boolean) => Promise<User>;
   register: (payload: authApi.RegisterPayload) => Promise<User>;
   logout: () => void;
@@ -79,7 +80,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(STORE.user);
   }, [clearTaskCache]);
 
-  const value = useMemo(() => ({ user, token, ready, login, register, logout }), [user, token, ready, login, register, logout]);
+  const value = useMemo(
+    () => ({
+      user,
+      token,
+      ready,
+      isAdmin: user?.role === "admin",
+      login,
+      register,
+      logout,
+    }),
+    [user, token, ready, login, register, logout],
+  );
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
 
