@@ -31,13 +31,20 @@ public static class ServiceCollectionExtensions
 
         services.AddValidationPipeline();
         services.AddFluentValidationPipeline();
+
+        var configuredOrigins = configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>()?
+            .Where(origin => !string.IsNullOrWhiteSpace(origin))
+            .Select(origin => origin.Trim().TrimEnd('/'))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase)
+            ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
         services.AddCors(options =>
         {
             options.AddPolicy("Frontend", policy =>
             {
-                policy.SetIsOriginAllowed(origin =>
-                        origin.StartsWith("http://localhost:", StringComparison.OrdinalIgnoreCase) ||
-                        origin.StartsWith("http://127.0.0.1:", StringComparison.OrdinalIgnoreCase))
+                policy.SetIsOriginAllowed(origin => IsAllowedFrontendOrigin(origin, configuredOrigins))
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
@@ -132,6 +139,32 @@ public static class ServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private static bool IsAllowedFrontendOrigin(string origin, IReadOnlySet<string> configuredOrigins)
+    {
+        if (string.IsNullOrWhiteSpace(origin))
+        {
+            return false;
+        }
+
+        if (!Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+        {
+            return false;
+        }
+
+        if (uri.Host.Equals("localhost", StringComparison.OrdinalIgnoreCase) ||
+            uri.Host.Equals("127.0.0.1", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (uri.Host.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return configuredOrigins.Contains(origin.TrimEnd('/'));
     }
 
     private static void IncludeXmlComments(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options, Assembly assembly)

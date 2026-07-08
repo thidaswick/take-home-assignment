@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using TaskTracker.API.Hubs;
 using TaskTracker.Application.Common.Exceptions;
@@ -18,6 +19,8 @@ public static class WebApplicationExtensions
     /// <returns>The web application for chaining.</returns>
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
+        app.UseForwardedHeaders();
+
         app.UseExceptionHandler(exceptionHandlerApp =>
         {
             exceptionHandlerApp.Run(async context =>
@@ -112,13 +115,19 @@ public static class WebApplicationExtensions
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskTracker API v1");
                 options.RoutePrefix = "swagger";
             });
+            app.UseHttpsRedirection();
         }
         else
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskTracker API v1");
+                options.RoutePrefix = "swagger";
+            });
             app.UseHsts();
         }
 
-        app.UseHttpsRedirection();
         app.UseCors("Frontend");
         app.UseAuthentication();
         app.UseAuthorization();
