@@ -17,8 +17,7 @@ export interface TaskAttachment {
 const MAX_FILES = 5;
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB each
 
-const ACCEPT =
-  "image/png,image/jpeg,image/webp,image/gif,application/pdf,.doc,.docx,.txt,.md,.csv";
+const ACCEPT = "image/png,image/jpeg,image/webp,image/gif,application/pdf,.doc,.docx,.txt,.md,.csv";
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -52,9 +51,7 @@ export function revokeAttachments(attachments: TaskAttachment[]) {
 /** Appends a readable attachment list into the task description text. */
 export function withAttachmentNotes(description: string, attachments: TaskAttachment[]): string {
   if (attachments.length === 0) return description;
-  const lines = attachments.map(
-    (a) => `- ${a.name} (${a.kind}, ${formatBytes(a.size)})`,
-  );
+  const lines = attachments.map((a) => `- ${a.name} (${a.kind}, ${formatBytes(a.size)})`);
   const block = ["", "---", "Attachments:", ...lines].join("\n");
   return `${description.trimEnd()}${block}`;
 }
@@ -113,12 +110,7 @@ export function FileAttachments({
     <div className="space-y-2">
       <div className="flex items-center justify-between gap-2">
         <Label>{label}</Label>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => inputRef.current?.click()}
-        >
+        <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
           <Paperclip className="mr-1 h-3.5 w-3.5" />
           Add files
         </Button>

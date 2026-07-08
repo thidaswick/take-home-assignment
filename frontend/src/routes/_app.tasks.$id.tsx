@@ -241,11 +241,7 @@ function TaskDetails() {
 
               <div className="mt-6 grid gap-3 sm:grid-cols-3">
                 <Meta icon={UserIcon} label="Owner" value={task.ownerName} />
-                <Meta
-                  icon={CalendarDays}
-                  label="Due date"
-                  value={formatDueDate(task.dueDate)}
-                />
+                <Meta icon={CalendarDays} label="Due date" value={formatDueDate(task.dueDate)} />
                 <Meta
                   icon={Clock}
                   label="Updated"
