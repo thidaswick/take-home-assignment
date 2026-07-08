@@ -2,8 +2,6 @@
 
 A modern full-stack task management application built for the **Software Engineer (Full Stack, Backend Focused)** take-home assignment.
 
-[![CI](https://github.com/thidaswick/take-home-assignment/actions/workflows/ci.yml/badge.svg)](https://github.com/thidaswick/take-home-assignment/actions/workflows/ci.yml)
-
 ---
 
 ## Overview
