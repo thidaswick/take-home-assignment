@@ -27,8 +27,4 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
-  // Vercel production preset (local/dev still works).
-  nitro: {
-    preset: process.env.VERCEL ? "vercel" : undefined,
-  },
 });

@@ -19,20 +19,13 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = DatabaseConnection.Resolve(configuration);
+        var connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
 
         services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            if (DatabaseConnection.IsPostgreSql(connectionString))
-            {
-                options.UseNpgsql(connectionString);
-                return;
-            }
-
             options.UseSqlServer(
                 connectionString,
-                sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
-        });
+                sql => sql.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
         return services;
     }

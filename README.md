@@ -137,13 +137,6 @@ GitHub Actions workflow (`.github/workflows/ci.yml`) runs on push/PR to `main`:
 - **Backend:** restore, build, test
 - **Frontend:** `npm ci`, lint, build
 
-## Hosting (QA demo)
-
-See **[DEPLOY.md](./DEPLOY.md)** for deploying:
-
-- Frontend → **Vercel**
-- Backend + SQL Server → **Railway**
-
 ## License
 
 MIT
