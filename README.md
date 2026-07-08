@@ -34,7 +34,7 @@ A modern full-stack task management application built for the **Software Enginee
 | **Backend** | ASP.NET Core 8, C#, EF Core, SQL Server, SignalR, JWT, FluentValidation |
 | **Frontend** | React, TypeScript, Vite, TanStack Router, Tailwind CSS, shadcn/ui |
 | **Testing** | xUnit integration tests |
-| **Tools** | Swagger, GitHub Actions, VS Code `.http` files |
+| **Tools** | Swagger, GitHub Actions, VS Code, Cursor AI `.http` files |
 
 ---
 
