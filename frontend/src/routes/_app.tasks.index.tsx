@@ -38,6 +38,7 @@ import {
 import { ArrowUpDown, ListChecks, Plus, Search, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { formatDueDate } from "@/lib/date";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/tasks/")({ component: TasksPage });
@@ -271,7 +272,7 @@ function TasksPage() {
                         <StatusBadge status={t.status} />
                       </TableCell>
                       <TableCell className="hidden text-sm text-muted-foreground sm:table-cell">
-                        {new Date(t.dueDate).toLocaleDateString()}
+                        {formatDueDate(t.dueDate)}
                       </TableCell>
                       {isAdmin && (
                         <TableCell className="hidden lg:table-cell">{t.ownerName}</TableCell>

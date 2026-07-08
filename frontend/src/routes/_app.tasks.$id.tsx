@@ -30,6 +30,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
+import { formatDueDate, fromApiDueDate, toApiDueDate } from "@/lib/date";
 
 const schema = z.object({
   title: z.string().trim().min(3, "At least 3 characters").max(120),
@@ -67,13 +68,13 @@ function TaskDetails() {
       title: task.title,
       description: task.description,
       status: task.status,
-      dueDate: task.dueDate.slice(0, 10),
+      dueDate: fromApiDueDate(task.dueDate),
     });
   }, [task, form]);
 
   const save = useMutation({
     mutationFn: (values: z.infer<typeof schema>) =>
-      updateTask(id, { ...values, dueDate: new Date(values.dueDate).toISOString() }),
+      updateTask(id, { ...values, dueDate: toApiDueDate(values.dueDate) }),
     onSuccess: async (updated) => {
       await qc.invalidateQueries({ queryKey: ["tasks", user?.id] });
       qc.setQueryData(["tasks", user?.id, id], updated);
@@ -220,7 +221,7 @@ function TaskDetails() {
                 <Meta
                   icon={CalendarDays}
                   label="Due date"
-                  value={new Date(task.dueDate).toLocaleDateString()}
+                  value={formatDueDate(task.dueDate)}
                 />
                 <Meta
                   icon={Clock}

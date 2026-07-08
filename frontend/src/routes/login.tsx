@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Logo } from "@/components/app/Logo";
 import { PasswordInput } from "@/components/app/PasswordInput";
+import { ThemeToggle } from "@/components/app/ThemeToggle";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useState } from "react";
 
@@ -55,6 +56,10 @@ function LoginPage() {
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0 grid-bg opacity-50" />
       <div className="pointer-events-none absolute -top-40 left-1/2 h-[400px] w-[700px] -translate-x-1/2 rounded-full bg-primary/20 blur-3xl" />
+
+      <div className="absolute right-4 top-4 z-10">
+        <ThemeToggle />
+      </div>
 
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 py-10">
         <div className="mb-6">

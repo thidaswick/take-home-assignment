@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 
 import { useAuth } from "@/lib/auth/AuthContext";
+import { formatDueDate } from "@/lib/date";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: DashboardPage });
 
@@ -182,7 +183,7 @@ function DashboardPage() {
                     {t.title}
                   </Link>
                   <p className="truncate text-xs text-muted-foreground">
-                    {t.ownerName} · Due {new Date(t.dueDate).toLocaleDateString()}
+                    {t.ownerName} · Due {formatDueDate(t.dueDate)}
                   </p>
                 </div>
                 <StatusBadge status={t.status} />

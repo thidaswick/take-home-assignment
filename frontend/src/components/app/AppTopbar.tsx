@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
+import { LiveClock } from "./LiveClock";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function AppTopbar() {
   const { user, logout } = useAuth();
@@ -42,6 +44,8 @@ export function AppTopbar() {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <LiveClock />
+        <ThemeToggle />
         <Button variant="ghost" size="icon" className="relative rounded-full">
           <Bell className="h-5 w-5" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive" />

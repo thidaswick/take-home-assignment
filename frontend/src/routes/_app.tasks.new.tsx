@@ -21,12 +21,20 @@ import {
 import { PageTransition } from "@/components/app/PageTransition";
 import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/AuthContext";
+import { toApiDueDate, toDateInputValue, formatDateInputLabel } from "@/lib/date";
+import {
+  FileAttachments,
+  attachmentAiContext,
+  revokeAttachments,
+  withAttachmentNotes,
+  type TaskAttachment,
+} from "@/components/app/FileAttachments";
 
 const schema = z.object({
   title: z.string().trim().min(3, "At least 3 characters").max(120),
-  description: z.string().trim().max(2000).default(""),
+  description: z.string().trim().max(1800).default(""),
   status: z.enum(["todo", "in_progress", "completed", "overdue"]),
   dueDate: z.string().min(1, "Required"),
   ownerId: z.string().optional(),
@@ -39,6 +47,13 @@ function NewTaskPage() {
   const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
   const [aiLoading, setAiLoading] = useState(false);
+  const [attachments, setAttachments] = useState<TaskAttachment[]>([]);
+
+  useEffect(() => {
+    return () => revokeAttachments(attachments);
+    // only revoke on unmount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const { data: users = [] } = useQuery({
     queryKey: ["users"],
@@ -52,7 +67,7 @@ function NewTaskPage() {
       title: "",
       description: "",
       status: "todo" as TaskStatus,
-      dueDate: new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10),
+      dueDate: toDateInputValue(new Date()),
       ownerId: user?.id,
     },
   });
@@ -61,14 +76,18 @@ function NewTaskPage() {
     mutationFn: (v: z.infer<typeof schema>) =>
       createTask({
         title: v.title,
-        description: v.description,
+        description: withAttachmentNotes(v.description, attachments),
         status: v.status,
-        dueDate: new Date(v.dueDate).toISOString(),
+        dueDate: toApiDueDate(v.dueDate),
         ownerId: isAdmin && v.ownerId ? v.ownerId : undefined,
       }),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: ["tasks"] });
-      toast.success("Task created");
+      toast.success(
+        attachments.length
+          ? `Task created with ${attachments.length} attachment${attachments.length > 1 ? "s" : ""}`
+          : "Task created",
+      );
       navigate({ to: "/tasks" });
     },
     onError: (error: Error) => toast.error(error.message || "Failed to create task"),
@@ -82,7 +101,11 @@ function NewTaskPage() {
     }
     setAiLoading(true);
     try {
-      const s = await generateAiSuggestions({ title, description: form.getValues("description") });
+      const baseDescription = form.getValues("description");
+      const s = await generateAiSuggestions({
+        title,
+        description: `${baseDescription}${attachmentAiContext(attachments)}`,
+      });
       form.setValue("description", s.improvedDescription, { shouldValidate: true });
       toast.success("AI enhanced your description");
     } finally {
@@ -140,6 +163,8 @@ function NewTaskPage() {
             />
           </div>
 
+          <FileAttachments attachments={attachments} onChange={setAttachments} />
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label>Status</Label>
@@ -163,6 +188,11 @@ function NewTaskPage() {
             <div className="space-y-1.5">
               <Label htmlFor="dueDate">Due date</Label>
               <Input id="dueDate" type="date" {...form.register("dueDate")} />
+              {form.watch("dueDate") && (
+                <p className="text-xs text-muted-foreground">
+                  Selected: {formatDateInputLabel(form.watch("dueDate"))}
+                </p>
+              )}
               {form.formState.errors.dueDate && (
                 <p className="text-xs text-destructive">{form.formState.errors.dueDate.message}</p>
               )}

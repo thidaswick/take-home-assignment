@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Sparkles,
   ClipboardList,
@@ -15,6 +15,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { PageTransition } from "@/components/app/PageTransition";
+import {
+  FileAttachments,
+  attachmentAiContext,
+  revokeAttachments,
+  type TaskAttachment,
+} from "@/components/app/FileAttachments";
 import { generateAiSuggestions } from "@/lib/api/ai";
 import type { AiSuggestion } from "@/lib/api/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -27,6 +33,12 @@ function AiAssistantPage() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AiSuggestion | null>(null);
+  const [attachments, setAttachments] = useState<TaskAttachment[]>([]);
+
+  useEffect(() => {
+    return () => revokeAttachments(attachments);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function run() {
     if (!title.trim()) {
@@ -35,7 +47,12 @@ function AiAssistantPage() {
     }
     setLoading(true);
     try {
-      setResult(await generateAiSuggestions({ title, description }));
+      setResult(
+        await generateAiSuggestions({
+          title,
+          description: `${description}${attachmentAiContext(attachments)}`,
+        }),
+      );
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : "Failed");
     } finally {
@@ -79,6 +96,14 @@ function AiAssistantPage() {
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
+
+            <FileAttachments
+              attachments={attachments}
+              onChange={setAttachments}
+              label="Reference files"
+              hint="Add screenshots or documents to give the AI more context"
+            />
+
             <Button
               onClick={run}
               disabled={loading}

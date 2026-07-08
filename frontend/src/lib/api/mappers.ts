@@ -66,7 +66,10 @@ function isOverdue(dueDate: string | null | undefined, status: number): boolean 
   if (!dueDate) return false;
   if (status === BackendTaskStatus.Completed || status === BackendTaskStatus.Cancelled)
     return false;
-  return new Date(dueDate) < new Date();
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(dueDate);
+  if (!match) return new Date(dueDate) < new Date();
+  const due = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 23, 59, 59);
+  return due < new Date();
 }
 
 export function mapTaskStatus(status: number, dueDate?: string | null): TaskStatus {
