@@ -1,141 +1,179 @@
-# Task Tracker — Take-Home Assignment
+# TaskFlow AI – Full Stack Task Tracker
 
-Full-stack task management app built with **ASP.NET Core 8** (backend) and **React + TypeScript** (frontend).
+A modern full-stack task management application built for the **Software Engineer (Full Stack, Backend Focused)** take-home assignment.
+
+[![CI](https://github.com/thidaswick/take-home-assignment/actions/workflows/ci.yml/badge.svg)](https://github.com/thidaswick/take-home-assignment/actions/workflows/ci.yml)
+
+---
+
+## Overview
+
+**TaskFlow AI** helps teams create, assign, and track work in real time. The backend exposes a secure REST API with JWT auth and SignalR updates; the React frontend delivers dashboards, task management, admin tooling, and an optional AI assistant powered by Google Gemini.
+
+---
 
 ## Features
 
-- User registration, login, JWT authentication, logout
+- User registration and login
+- JWT authentication
 - Role-based access control (**User** / **Admin**)
-- Task CRUD with pagination and filtering (status, owner)
-- SignalR real-time task updates
-- FluentValidation + global exception handling
+- Task CRUD (create, read, update, delete)
+- Pagination and filtering (status, owner)
+- **Cancelled** task status for duplicate / out-of-scope work
+- Real-time task updates with **SignalR**
+- React frontend with dark mode
+- SQL Server database (EF Core migrations)
 - Swagger API documentation
-- Gemini AI task suggestions (optional bonus)
+- Optional AI task assistant (Gemini)
 - GitHub Actions CI (build, lint, tests)
 
-## Project structure
+---
+
+## Tech Stack
+
+| Area | Technologies |
+|------|----------------|
+| **Backend** | ASP.NET Core 8, C#, EF Core, SQL Server, SignalR, JWT, FluentValidation |
+| **Frontend** | React, TypeScript, Vite, TanStack Router, Tailwind CSS, shadcn/ui |
+| **Testing** | xUnit integration tests |
+| **Tools** | Swagger, GitHub Actions, VS Code `.http` files |
+
+---
+
+## Project Structure
 
 ```
 take-home-assignment/
-├── backend/                 # ASP.NET Core API (Clean Architecture)
-├── frontend/                # React + Vite + TanStack Router
-└── .github/workflows/ci.yml # CI pipeline
+├── backend/
+│   ├── src/
+│   │   ├── TaskTracker.API/           # Controllers, SignalR hub, Swagger, JWT
+│   │   ├── TaskTracker.Application/   # Use cases, DTOs, validators, handlers
+│   │   ├── TaskTracker.Domain/        # Entities, enums, domain rules
+│   │   └── TaskTracker.Infrastructure/# EF Core, repositories, AI, auth
+│   ├── tests/
+│   │   └── TaskTracker.Tests/         # Integration tests (in-memory DB)
+│   ├── scripts/                       # Database helper scripts
+│   └── TaskTracker.sln
+├── frontend/
+│   ├── src/
+│   │   ├── routes/                    # App pages (dashboard, tasks, admin, AI)
+│   │   ├── components/                # UI + app components
+│   │   └── lib/                       # API client, auth, realtime, theme
+│   └── package.json
+└── .github/workflows/ci.yml           # Backend + frontend CI pipeline
 ```
+
+**Architecture:** Clean Architecture on the backend — API → Application → Domain ← Infrastructure.
+
+---
 
 ## Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download)
 - [Node.js 20+](https://nodejs.org/)
 - SQL Server (LocalDB or full instance)
-- (Optional) Google Gemini API key for AI suggestions
+- *(Optional)* Google Gemini API key for AI suggestions
 
-## Backend setup
+---
 
-```powershell
+## Quick Start
+
+### 1. Backend
+
+```bash
 cd backend
 dotnet restore
+dotnet build
 dotnet ef database update --project src/TaskTracker.Infrastructure --startup-project src/TaskTracker.API
-dotnet run --project src/TaskTracker.API
+dotnet run --project src/TaskTracker.API --launch-profile http
 ```
 
 | Service | URL |
 |---------|-----|
 | API | http://localhost:5108 |
-| **Swagger UI** | **http://localhost:5108/swagger** |
+| **Swagger** | http://localhost:5108/swagger |
+| Health | http://localhost:5108/health |
 
-### Configuration
+### 2. Frontend
 
-Connection string and JWT settings live in `backend/src/TaskTracker.API/appsettings.json`.
-
-On first startup, a default admin account is seeded if none exists:
-
-| Email | Password |
-|-------|----------|
-| `admin@taskflow.ai` | `Admin123!` |
-
-### Gemini AI (optional)
-
-```powershell
-cd backend/src/TaskTracker.API
-dotnet user-secrets set "Gemini:ApiKey" "YOUR_KEY_HERE"
-```
-
-## Frontend setup
-
-```powershell
+```bash
 cd frontend
-copy .env.example .env
 npm install
 npm run dev
 ```
 
-Frontend runs at **http://localhost:5173** (Vite default).
+Open **http://localhost:8081** (or the port Vite prints).
 
-### Environment variables
+Set `VITE_API_URL=http://localhost:5108/api` in `.env` if needed (see `.env.example`).
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_URL` | Backend API base URL (default `http://localhost:5108/api`) |
+---
 
-## API testing (Swagger)
+## Admin Login
 
-Use **Swagger UI** at http://localhost:5108/swagger to explore and test all endpoints:
+A default admin account is seeded on first startup if no admin exists:
 
-1. Call `POST /api/auth/login` with admin credentials
-2. Click **Authorize** and paste the JWT as `Bearer <token>`
-3. Test tasks, users, and AI endpoints
+| Field | Value |
+|-------|-------|
+| **Email** | `admin@taskflow.ai` |
+| **Password** | `Admin123!` |
 
-You can also use `backend/src/TaskTracker.API/TaskTracker.API.http` from VS Code / Rider.
+Use this account to access the admin dashboard, user list, and owner assignment features.
 
-## Running tests
+---
 
-```powershell
+## API Testing (Swagger)
+
+1. Start the backend and open http://localhost:5108/swagger
+2. Call `POST /api/auth/login` with the admin credentials above
+3. Click **Authorize** and enter: `Bearer <your-jwt-token>`
+4. Test tasks, users, and AI endpoints
+
+You can also use `backend/src/TaskTracker.API/TaskTracker.API.http` from VS Code or Rider.
+
+---
+
+## Running Tests
+
+```bash
 cd backend
 dotnet test TaskTracker.sln
 ```
 
-Integration tests use an in-memory database and cover auth, task CRUD, and RBAC.
+Integration tests cover authentication, task CRUD, and role-based access control using an in-memory database.
 
-## Architecture
+```bash
+cd frontend
+npm run lint
+npm run build
+```
 
-Clean Architecture with four layers:
+---
 
-| Layer | Project | Responsibility |
-|-------|---------|----------------|
-| API | `TaskTracker.API` | Controllers, SignalR hub, JWT middleware, Swagger |
-| Application | `TaskTracker.Application` | Use cases, DTOs, validators, authorization rules |
-| Domain | `TaskTracker.Domain` | Entities, enums, business rules |
-| Infrastructure | `TaskTracker.Infrastructure` | EF Core, repositories, Gemini AI, auth services |
+## Configuration
 
-## Design decisions
+Backend settings live in `backend/src/TaskTracker.API/appsettings.json`:
 
-- **CQRS-style handlers** for task commands/queries keep controllers thin
-- **JWT + role claims** for stateless auth; `TaskAuthorization` enforces ownership rules in handlers
-- **Admin-only** `GET /api/users` for the admin dashboard and owner assignment UI
-- **SignalR** broadcasts `TaskCreated`, `TaskUpdated`, `TaskDeleted` to subscribed clients
-- **Swagger** used for API documentation and manual testing (instead of Postman)
-- **Database seeder** creates a default admin when none exists (dev/demo convenience)
+- `ConnectionStrings:DefaultConnection` — SQL Server
+- `Jwt:*` — token signing and expiry
+- `Gemini:*` — optional AI integration
 
-## Assumptions
+For Gemini locally:
 
-- SQL Server is available locally with Windows authentication (adjust connection string if needed)
-- Real-time updates use a single `tasks` SignalR group (no per-user channels)
-- Frontend pagination on the tasks page is client-side; the API supports server-side pagination
-- AI suggestions require a valid Gemini API key; the app works without it for non-AI flows
+```bash
+cd backend/src/TaskTracker.API
+dotnet user-secrets set "Gemini:ApiKey" "YOUR_KEY_HERE"
+```
 
-## Future improvements
-
-- Docker Compose for backend + SQL Server + frontend
-- More granular SignalR groups (per user / per team)
-- End-to-end tests with Playwright
-- Admin endpoint to promote users without direct DB access
+---
 
 ## CI/CD
 
-GitHub Actions workflow (`.github/workflows/ci.yml`) runs on push/PR to `main`:
+GitHub Actions (`.github/workflows/ci.yml`) runs on every push to `main`:
 
-- **Backend:** restore, build, test
-- **Frontend:** `npm ci`, lint, build
+- **Backend** — restore, build, test
+- **Frontend** — `npm ci`, lint, build
+
+---
 
 ## License
 
