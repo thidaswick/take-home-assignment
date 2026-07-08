@@ -9,6 +9,7 @@ Full-stack task management app built with **ASP.NET Core 8** (backend) and **Rea
 - Task CRUD with pagination and filtering (status, owner)
 - SignalR real-time task updates
 - FluentValidation + global exception handling
+- Swagger API documentation
 - Gemini AI task suggestions (optional bonus)
 - GitHub Actions CI (build, lint, tests)
 
@@ -18,7 +19,6 @@ Full-stack task management app built with **ASP.NET Core 8** (backend) and **Rea
 take-home-assignment/
 ├── backend/                 # ASP.NET Core API (Clean Architecture)
 ├── frontend/                # React + Vite + TanStack Router
-├── docs/postman/            # Postman collection + environment
 └── .github/workflows/ci.yml # CI pipeline
 ```
 
@@ -38,8 +38,10 @@ dotnet ef database update --project src/TaskTracker.Infrastructure --startup-pro
 dotnet run --project src/TaskTracker.API
 ```
 
-API runs at **http://localhost:5108**  
-Swagger UI: **http://localhost:5108/swagger**
+| Service | URL |
+|---------|-----|
+| API | http://localhost:5108 |
+| **Swagger UI** | **http://localhost:5108/swagger** |
 
 ### Configuration
 
@@ -62,7 +64,7 @@ dotnet user-secrets set "Gemini:ApiKey" "YOUR_KEY_HERE"
 
 ```powershell
 cd frontend
-cp .env.example .env
+copy .env.example .env
 npm install
 npm run dev
 ```
@@ -75,6 +77,16 @@ Frontend runs at **http://localhost:5173** (Vite default).
 |----------|-------------|
 | `VITE_API_URL` | Backend API base URL (default `http://localhost:5108/api`) |
 
+## API testing (Swagger)
+
+Use **Swagger UI** at http://localhost:5108/swagger to explore and test all endpoints:
+
+1. Call `POST /api/auth/login` with admin credentials
+2. Click **Authorize** and paste the JWT as `Bearer <token>`
+3. Test tasks, users, and AI endpoints
+
+You can also use `backend/src/TaskTracker.API/TaskTracker.API.http` from VS Code / Rider.
+
 ## Running tests
 
 ```powershell
@@ -83,16 +95,6 @@ dotnet test TaskTracker.sln
 ```
 
 Integration tests use an in-memory database and cover auth, task CRUD, and RBAC.
-
-## Postman
-
-Import these files into Postman:
-
-- `docs/postman/TaskTracker.postman_collection.json`
-- `docs/postman/TaskTracker.postman_environment.json`
-
-1. Run **Auth → Login** (uses seeded admin credentials) — saves `accessToken` automatically
-2. Call task and user endpoints with the saved token
 
 ## Architecture
 
@@ -111,6 +113,7 @@ Clean Architecture with four layers:
 - **JWT + role claims** for stateless auth; `TaskAuthorization` enforces ownership rules in handlers
 - **Admin-only** `GET /api/users` for the admin dashboard and owner assignment UI
 - **SignalR** broadcasts `TaskCreated`, `TaskUpdated`, `TaskDeleted` to subscribed clients
+- **Swagger** used for API documentation and manual testing (instead of Postman)
 - **Database seeder** creates a default admin when none exists (dev/demo convenience)
 
 ## Assumptions
@@ -126,7 +129,6 @@ Clean Architecture with four layers:
 - More granular SignalR groups (per user / per team)
 - End-to-end tests with Playwright
 - Admin endpoint to promote users without direct DB access
-- Email notifications for task assignments
 
 ## CI/CD
 

@@ -108,11 +108,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         property: "og:image",
-        content: "/og-image.png",
+        content: "/favicon.svg",
       },
       {
         name: "twitter:image",
-        content: "/og-image.png",
+        content: "/favicon.svg",
       },
     ],
     links: [
@@ -121,7 +121,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "apple-touch-icon", href: "/og-image.png" },
     ],
   }),
   shellComponent: RootShell,
