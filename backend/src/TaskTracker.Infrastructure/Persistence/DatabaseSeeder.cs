@@ -32,7 +32,14 @@ public static class DatabaseSeeder
         var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("DatabaseSeeder");
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        await dbContext.Database.MigrateAsync();
+        if (DatabaseConnection.IsPostgreSql(dbContext.Database.GetConnectionString() ?? string.Empty))
+        {
+            await dbContext.Database.EnsureCreatedAsync();
+        }
+        else
+        {
+            await dbContext.Database.MigrateAsync();
+        }
 
         var hasAdmin = await dbContext.Users.AnyAsync(user => user.Role == UserRole.Admin);
         if (hasAdmin)

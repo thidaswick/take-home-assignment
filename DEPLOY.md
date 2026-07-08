@@ -5,7 +5,7 @@ This app has two parts. Deploy **backend first**, then **frontend**.
 ```
 Frontend (Vercel)  →  https://your-app.vercel.app
 Backend  (Railway) →  https://your-api.up.railway.app
-Database (Railway) →  SQL Server / Postgres-compatible SQL Server service
+Database (Railway) →  PostgreSQL (Railway) or SQL Server (local dev)
 ```
 
 ---
@@ -27,21 +27,20 @@ Database (Railway) →  SQL Server / Postgres-compatible SQL Server service
 1. Go to [railway.com](https://railway.com) → **New Project**
 2. Choose **Deploy from GitHub repo** → select `take-home-assignment`
 
-### B. Add SQL Server database
+### B. Add PostgreSQL database
 
-Your API uses **SQL Server** (EF Core `UseSqlServer`).
+Railway’s database menu includes **PostgreSQL** (not Microsoft SQL Server). The API auto-detects PostgreSQL and uses it on Railway.
 
-1. In the Railway project → **+ New** → **Database** / **Template**
-2. Prefer **Microsoft SQL Server** if available
-3. Open the DB service → **Variables** / **Connect** and copy the connection string
+1. In the Railway project → **+ New** → **Database** → **PostgreSQL**
+2. Open the DB service → **Variables** and copy **`DATABASE_URL`**
 
-Example shape (adjust to Railway’s values):
+Example shape:
 
 ```text
-Server=xxx.railway.app,1433;Database=railway;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;Encrypt=True
+postgresql://postgres:PASSWORD@HOST:5432/railway
 ```
 
-If Railway only offers **PostgreSQL**, ask me to switch the API to Postgres (needs code changes). SQL Server is simplest to keep as-is.
+Local development still uses SQL Server via `appsettings.json`.
 
 ### C. Deploy the API service
 
@@ -58,7 +57,7 @@ In the **API** service → **Variables**:
 |----------|--------|
 | `ASPNETCORE_ENVIRONMENT` | `Production` |
 | `ASPNETCORE_URLS` | `http://+:8080` |
-| `ConnectionStrings__DefaultConnection` | *(paste SQL Server connection string)* |
+| `ConnectionStrings__DefaultConnection` | *(paste PostgreSQL `DATABASE_URL`, or `${{Postgres.DATABASE_URL}}`)* |
 | `Jwt__Key` | long random string, **at least 32 characters** |
 | `Jwt__Issuer` | `TaskTracker` |
 | `Jwt__Audience` | `TaskTracker` |
