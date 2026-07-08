@@ -30,6 +30,7 @@ function AnalyticsPage() {
     { name: "Pending", value: tasks.filter((t) => t.status === "todo").length },
     { name: "In progress", value: tasks.filter((t) => t.status === "in_progress").length },
     { name: "Completed", value: tasks.filter((t) => t.status === "completed").length },
+    { name: "Cancelled", value: tasks.filter((t) => t.status === "cancelled").length },
     { name: "Overdue", value: tasks.filter((t) => t.status === "overdue").length },
   ];
 

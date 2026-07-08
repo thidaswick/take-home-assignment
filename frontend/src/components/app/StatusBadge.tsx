@@ -6,6 +6,7 @@ const styles: Record<TaskStatus, string> = {
   todo: "bg-muted text-muted-foreground border-transparent",
   in_progress: "bg-primary/10 text-primary border-transparent",
   completed: "bg-success/15 text-success border-transparent",
+  cancelled: "bg-muted text-muted-foreground border-border",
   overdue: "bg-destructive/10 text-destructive border-transparent",
 };
 
@@ -13,6 +14,7 @@ const labels: Record<TaskStatus, string> = {
   todo: "Pending",
   in_progress: "In progress",
   completed: "Completed",
+  cancelled: "Cancelled",
   overdue: "Overdue",
 };
 
@@ -25,6 +27,7 @@ export function StatusBadge({ status, className }: { status: TaskStatus; classNa
           status === "todo" && "bg-muted-foreground",
           status === "in_progress" && "bg-primary",
           status === "completed" && "bg-success",
+          status === "cancelled" && "bg-muted-foreground",
           status === "overdue" && "bg-destructive",
         )}
       />

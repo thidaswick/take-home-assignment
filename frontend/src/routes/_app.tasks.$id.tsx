@@ -35,7 +35,7 @@ import { formatDueDate, fromApiDueDate, toApiDueDate } from "@/lib/date";
 const schema = z.object({
   title: z.string().trim().min(3, "At least 3 characters").max(120),
   description: z.string().trim().max(2000).default(""),
-  status: z.enum(["todo", "in_progress", "completed", "overdue"]),
+  status: z.enum(["todo", "in_progress", "completed", "cancelled", "overdue"]),
   dueDate: z.string().min(1, "Required"),
 });
 
@@ -94,6 +94,16 @@ function TaskDetails() {
     onError: (error: Error) => toast.error(error.message || "Failed to update task"),
   });
 
+  const markCancelled = useMutation({
+    mutationFn: () => updateTask(id, { status: "cancelled" }),
+    onSuccess: async (updated) => {
+      await qc.invalidateQueries({ queryKey: ["tasks", user?.id] });
+      qc.setQueryData(["tasks", user?.id, id], updated);
+      toast.success("Task cancelled");
+    },
+    onError: (error: Error) => toast.error(error.message || "Failed to cancel task"),
+  });
+
   if (isLoading) {
     return (
       <div className="mx-auto max-w-4xl space-y-4">
@@ -114,6 +124,8 @@ function TaskDetails() {
   }
 
   const isCompleted = task.status === "completed";
+  const isCancelled = task.status === "cancelled";
+  const isClosed = isCompleted || isCancelled;
 
   return (
     <PageTransition>
@@ -177,7 +189,7 @@ function TaskDetails() {
                       <SelectItem value="todo">Pending</SelectItem>
                       <SelectItem value="in_progress">In progress</SelectItem>
                       <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="overdue">Overdue</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -195,12 +207,23 @@ function TaskDetails() {
                   <h1 className="mt-3 text-2xl font-semibold tracking-tight">{task.title}</h1>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" onClick={() => setEditing(true)}>
+                  <Button variant="outline" onClick={() => setEditing(true)} disabled={isCancelled}>
                     Edit
                   </Button>
                   <Button
+                    variant="outline"
+                    disabled={isClosed || markCancelled.isPending}
+                    onClick={() => markCancelled.mutate()}
+                  >
+                    {markCancelled.isPending
+                      ? "Cancelling..."
+                      : isCancelled
+                        ? "Cancelled"
+                        : "Cancel task"}
+                  </Button>
+                  <Button
                     className="gradient-brand text-white"
-                    disabled={isCompleted || markComplete.isPending}
+                    disabled={isClosed || markComplete.isPending}
                     onClick={() => markComplete.mutate()}
                   >
                     {markComplete.isPending

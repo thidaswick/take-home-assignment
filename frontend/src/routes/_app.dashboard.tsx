@@ -34,6 +34,7 @@ function DashboardPage() {
     pending: tasks.filter((t) => t.status === "todo").length,
     inProgress: tasks.filter((t) => t.status === "in_progress").length,
     completed: tasks.filter((t) => t.status === "completed").length,
+    cancelled: tasks.filter((t) => t.status === "cancelled").length,
     overdue: tasks.filter((t) => t.status === "overdue").length,
   };
   const done = counts.total ? Math.round((counts.completed / counts.total) * 100) : 0;
@@ -42,8 +43,9 @@ function DashboardPage() {
     { name: "Pending", value: counts.pending, color: "var(--muted-foreground)" },
     { name: "In progress", value: counts.inProgress, color: "var(--primary)" },
     { name: "Completed", value: counts.completed, color: "var(--success)" },
+    { name: "Cancelled", value: counts.cancelled, color: "var(--border)" },
     { name: "Overdue", value: counts.overdue, color: "var(--destructive)" },
-  ];
+  ].filter((d) => d.value > 0);
 
   const recent = [...tasks].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1)).slice(0, 5);
 
@@ -144,11 +146,12 @@ function DashboardPage() {
               <span className="text-2xl font-semibold">{done}%</span>
             </div>
             <Progress value={done} className="mt-4 h-2" />
-            <div className="mt-4 grid grid-cols-3 gap-3 text-center">
+            <div className="mt-4 grid grid-cols-2 gap-3 text-center sm:grid-cols-4">
               {[
                 { l: "Pending", v: counts.pending, c: "text-muted-foreground" },
                 { l: "In progress", v: counts.inProgress, c: "text-primary" },
                 { l: "Completed", v: counts.completed, c: "text-success" },
+                { l: "Cancelled", v: counts.cancelled, c: "text-muted-foreground" },
               ].map((s) => (
                 <div key={s.l} className="rounded-xl border p-3">
                   <div className={"text-xl font-semibold " + s.c}>{s.v}</div>

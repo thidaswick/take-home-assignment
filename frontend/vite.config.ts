@@ -9,6 +9,8 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 export default defineConfig({
   vite: {
     server: {
+      // Allow Cloudflare Tunnel hostnames (quick tunnels change every run).
+      allowedHosts: [".trycloudflare.com"],
       proxy: {
         "/api": {
           target: "http://localhost:5108",

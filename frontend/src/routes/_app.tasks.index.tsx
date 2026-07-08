@@ -170,6 +170,7 @@ function TasksPage() {
                 <SelectItem value="todo">Pending</SelectItem>
                 <SelectItem value="in_progress">In progress</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
                 <SelectItem value="overdue">Overdue</SelectItem>
               </SelectContent>
             </Select>

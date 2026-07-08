@@ -129,10 +129,6 @@ function LoginPage() {
               Create one
             </Link>
           </p>
-          <p className="mt-3 text-center text-xs text-muted-foreground">
-            Demo admin: <span className="font-mono">admin@taskflow.ai</span> /{" "}
-            <span className="font-mono">Admin123!</span>
-          </p>
         </motion.div>
       </div>
     </div>

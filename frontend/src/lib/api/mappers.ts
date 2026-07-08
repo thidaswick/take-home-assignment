@@ -73,6 +73,7 @@ function isOverdue(dueDate: string | null | undefined, status: number): boolean 
 }
 
 export function mapTaskStatus(status: number, dueDate?: string | null): TaskStatus {
+  if (status === BackendTaskStatus.Cancelled) return "cancelled";
   if (isOverdue(dueDate, status)) return "overdue";
   switch (status) {
     case BackendTaskStatus.InProgress:
@@ -101,6 +102,8 @@ export function mapTask(dto: ApiTaskDto): Task {
 export function toBackendStatus(status: TaskStatus): number {
   if (status === "in_progress") return BackendTaskStatus.InProgress;
   if (status === "completed") return BackendTaskStatus.Completed;
+  if (status === "cancelled") return BackendTaskStatus.Cancelled;
+  // "overdue" is a derived UI state; persist as Pending until due date still applies.
   return BackendTaskStatus.Pending;
 }
 

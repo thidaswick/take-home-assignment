@@ -1,4 +1,4 @@
-export type TaskStatus = "todo" | "in_progress" | "completed" | "overdue";
+export type TaskStatus = "todo" | "in_progress" | "completed" | "cancelled" | "overdue";
 export type Role = "user" | "admin";
 
 export interface User {

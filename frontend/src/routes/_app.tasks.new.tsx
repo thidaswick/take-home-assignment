@@ -35,7 +35,7 @@ import {
 const schema = z.object({
   title: z.string().trim().min(3, "At least 3 characters").max(120),
   description: z.string().trim().max(1800).default(""),
-  status: z.enum(["todo", "in_progress", "completed", "overdue"]),
+  status: z.enum(["todo", "in_progress", "completed", "cancelled", "overdue"]),
   dueDate: z.string().min(1, "Required"),
   ownerId: z.string().optional(),
 });
@@ -181,7 +181,7 @@ function NewTaskPage() {
                   <SelectItem value="todo">Pending</SelectItem>
                   <SelectItem value="in_progress">In progress</SelectItem>
                   <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -37,9 +37,12 @@ public static class ServiceCollectionExtensions
             {
                 policy.SetIsOriginAllowed(origin =>
                         origin.StartsWith("http://localhost:", StringComparison.OrdinalIgnoreCase) ||
-                        origin.StartsWith("http://127.0.0.1:", StringComparison.OrdinalIgnoreCase))
+                        origin.StartsWith("http://127.0.0.1:", StringComparison.OrdinalIgnoreCase) ||
+                        (Uri.TryCreate(origin, UriKind.Absolute, out var uri) &&
+                         uri.Host.EndsWith(".trycloudflare.com", StringComparison.OrdinalIgnoreCase)))
                     .AllowAnyHeader()
-                    .AllowAnyMethod();
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
         });
         services.AddEndpointsApiExplorer();
